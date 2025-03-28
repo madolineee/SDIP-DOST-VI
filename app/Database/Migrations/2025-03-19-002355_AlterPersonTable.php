@@ -16,10 +16,20 @@ class AlterPersonTable extends Migration
                 'after' => 'description',
             ],
         ]);
+
+        $this->forge->addColumn('persons', [
+            'image' => [
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'null' => true,
+                'after' => 'id',
+            ],
+        ]);
     }
 
     public function down()
     {
-        $this->forge->dropColumn(table: 'persons', 'position');
+        $this->forge->dropColumn('persons', ['position']);
+        $this->forge->dropColumn('persons', 'image');
     }
 }

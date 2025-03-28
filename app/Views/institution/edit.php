@@ -239,40 +239,42 @@
     }
 </style>
 
-
 <body>
-<!-- Main Modal for First Transaction -->
-<div class="modal is-active" id="main-modal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Add Institution</p>
-            <button class="delete" id="close-modal" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-            <form id="stakeholder-form" action="<?= site_url('institution/store') ?>" method="post"
-                enctype="multipart/form-data">
-                <?= csrf_field() ?>
+    <div class="modal is-active" id="main-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Edit Institution</p>
+                <button class="delete" id="close-modal" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="stakeholder-form"
+                    action="<?= site_url('institution/update/' . $institution['institution_id']) ?>" method="post"
+                    enctype="multipart/form-data">
+                    <?= csrf_field() ?>
 
-                <!-- Image Upload -->
-                <div class="image-placeholder" onclick="document.getElementById('image').click()">
-                    <figure class="profile-image">
-                        <span id="profile-text" class="profile-text">Profile</span>
-                        <img id="profile-preview" src="<?= base_url('uploads/' . ($institution['image'] ?? 'default.png')) ?>" >
-                        <div class="edit-button">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                    </figure>
-                    <input type="file" id="image" name="image" accept="image/png, image/jpeg" class="hidden-input"
-                        onchange="previewImage(event)">
-                </div>
+                    <div class="image-placeholder" onclick="document.getElementById('image-upload').click()">
+                        <figure class="profile-image">
+                            <img id="image-preview"
+                                src="<?= base_url(($institution['image'] ?? 'uploads/institutions/default.png')) ?>"
+                                alt="Profile Picture">
+
+
+                            <div class="edit-button">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                        </figure>
+                        <input type="file" id="image-upload" name="image" accept="image/png, image/jpeg"
+                            class="hidden-input">
+                    </div>
 
                     <div class="columns is-multiline">
                         <div class="column is-half">
                             <div class="field">
                                 <label class="label">Institution</label>
                                 <div class="control">
-                                    <input type="text" name="name" class="input" required>
+                                    <input type="text" name="name" class="input"
+                                        value="<?= $institution['name'] ?? '' ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -281,7 +283,8 @@
                             <div class="field">
                                 <label class="label">Abbreviation</label>
                                 <div class="control">
-                                    <input type="text" name="abbreviation" class="input">
+                                    <input type="text" name="abbreviation" class="input"
+                                        value="<?= $institution['abbreviation'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -291,8 +294,8 @@
                                 <label class="label">Type</label>
                                 <div class="control">
                                     <div class="select-input-container">
-                                        <input type="text" id="type" name="type" class="input"
-                                            placeholder="Or enter manually">
+                                        <input type="text" name="type" class="input" id="type-input" list="type-options"
+                                            value="<?= $institution['type'] ?? '' ?>" required>
                                         <select class="select-overlay"
                                             onchange="document.getElementById('type').value=this.value">
                                             <option value=""></option>
@@ -312,10 +315,10 @@
                                 <label class="label">Honorifics</label>
                                 <div class="control">
                                     <div class="select-input-container">
-                                        <input type="text" id="honorifics" name="hon" class="input"
-                                            placeholder="Or enter manually">
+                                        <input type="text" id="hon" name="honorifics" class="input"
+                                            value="<?= $institution['honorifics'] ?? '' ?>">
                                         <select class="select-overlay"
-                                            onchange="document.getElementById('honorifics').value=this.value">
+                                            onchange="document.getElementById('hon').value=this.value">
                                             <option value=""></option>
                                             <option value="Mr.">Mr.</option>
                                             <option value="Ms.">Ms.</option>
@@ -331,7 +334,8 @@
                             <div class="field">
                                 <label class="label">First Name</label>
                                 <div class="control">
-                                    <input type="text" name="first_name" class="input" required>
+                                    <input type="text" name="first_name" class="input"
+                                        value="<?= $institution['first_name'] ?? '' ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +344,8 @@
                             <div class="field">
                                 <label class="label">Middle Initial</label>
                                 <div class="control">
-                                    <input type="text" name="middle_name" class="input" required>
+                                    <input type="text" name="first_name" class="input"
+                                        value="<?= $institution['middle_name'] ?? '' ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -349,7 +354,8 @@
                             <div class="field">
                                 <label class="label">Last Name</label>
                                 <div class="control">
-                                    <input type="text" name="last_name" class="input" required>
+                                    <input type="text" name="last_name" class="input"
+                                        value="<?= $institution['last_name'] ?? '' ?>" required>
                                 </div>
                             </div>
                         </div>
@@ -358,28 +364,18 @@
                             <div class="field">
                                 <label class="label">Designation</label>
                                 <div class="control">
-                                    <input type="text" name="designation" class="input">
+                                    <input type="text" name="designation" class="input"
+                                        value="<?= $institution['designation'] ?? '' ?>">
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
 
                         <div class="column is-half">
                             <div class="field">
                                 <label class="label">Country</label>
                                 <div class="control">
-                                    <div class="select-input-container">
-                                        <input type="text" id="country-input" name="country" class="input"
-                                            placeholder="Or enter manually">
-                                        <select class="select-overlay"
-                                            onchange="document.getElementById('country-input').value=this.value">
-                                            <option value=""></option>
-                                            <option value="USA">USA</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="UK">UK</option>
-                                            <option value="Australia">Australia</option>
-                                            <option value="Philippines">Philippines</option>
-                                        </select>
-                                    </div>
+                                    <input type="text" name="country" class="input"
+                                        value="<?= $institution['country'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -388,7 +384,8 @@
                             <div class="field">
                                 <label class="label">Province</label>
                                 <div class="control">
-                                    <input type="text" name="province" class="input">
+                                    <input type="text" name="province" class="input"
+                                        value="<?= $institution['province'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -397,7 +394,8 @@
                             <div class="field">
                                 <label class="label">Municipality</label>
                                 <div class="control">
-                                    <input type="text" name="municipality" class="input">
+                                    <input type="text" name="municipality" class="input"
+                                        value="<?= $institution['municipality'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -406,7 +404,8 @@
                             <div class="field">
                                 <label class="label">Street</label>
                                 <div class="control">
-                                    <input type="text" name="street" class="input">
+                                    <input type="text" name="street" class="input"
+                                        value="<?= $institution['street'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -415,7 +414,8 @@
                             <div class="field">
                                 <label class="label">Barangay</label>
                                 <div class="control">
-                                    <input type="text" name="barangay" class="input">
+                                    <input type="text" name="barangay" class="input"
+                                        value="<?= $institution['barangay'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -424,7 +424,8 @@
                             <div class="field">
                                 <label class="label">Telephone Number</label>
                                 <div class="control">
-                                    <input type="text" name="telephone_num" class="input">
+                                    <input type="text" name="telephone_num" class="input"
+                                        value="<?= $institution['telephone_num'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
@@ -433,59 +434,59 @@
                             <div class="field">
                                 <label class="label">Email Address</label>
                                 <div class="control">
-                                    <input type="email" name="email_address" class="input">
+                                    <input type="email" name="email_address" class="input"
+                                        value="<?= $institution['email_address'] ?? '' ?>">
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <section class="modal-card-foot has-text-right">
-                        <button type="submit" class="button is-success">Save</button>
+                        <button type="submit" class="button is-success">Update</button>
                     </section>
                 </form>
             </section>
         </div>
     </div>
+</body>
 
-    <script>
-       function previewImage(event) {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".select-input-container").forEach(container => {
+            let inputField = container.querySelector("input");
+
+            let selectField = container.querySelector("select");
+
+            selectField.addEventListener("change", function () {
+                if (this.value) {
+                    inputField.value = this.value;  // Update input field with selected value
+                    this.selectedIndex = 0;  // Reset dropdown to default empty option
+                }
+            });
+
+            inputField.addEventListener("input", function () {
+                if (this.value === "") {
+                    selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
+                }
+            });
+        });
+    });
+    document.getElementById("image-upload").addEventListener("change", function (event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                document.getElementById('profile-preview').src = e.target.result;
-                document.getElementById('profile-text').style.display = 'none';
+                document.getElementById("image-preview").src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
-    }
-        document.getElementById("close-modal").addEventListener("click", function () {
-            window.location.href = "<?= base_url('institution/home') ?>";
-        });
+    });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".select-input-container").forEach(container => {
-                let inputField = container.querySelector("input");
-                let selectField = container.querySelector("select");
 
-                selectField.addEventListener("change", function () {
-                    if (this.value) {
-                        inputField.value = this.value;  // Update input field with selected value
-                        this.selectedIndex = 0;  // Reset dropdown to default empty option
-                    }
-                });
 
-                inputField.addEventListener("input", function () {
-                    if (this.value === "") {
-                        selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
-                    }
-                });
-            });
+    document.getElementById("close-modal").addEventListener("click", function () {
+        window.location.href = "<?= base_url('institution/home') ?>";
+    });
+</script>
 
-            document.getElementById("close-modal").addEventListener("click", function () {
-                window.location.href = "<?= base_url('institution/home') ?>"; // Redirect to institution/home
-            });
-        });
-    </script>
-
-    <?= $this->endSection() ?>
+<?= $this->endSection(); ?>

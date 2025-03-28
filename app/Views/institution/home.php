@@ -4,55 +4,106 @@
 <style>
     .card {
         position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        background: white;
+        width: 380px;
+        height: 420px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
     }
 
-    .kebab-menu {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-    }
-
-    .image-upload {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .image-upload input[type="file"] {
-        display: none;
-    }
-
-    .image-upload-placeholder {
+    .card-image {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f5f5f5;
-        border: 2px dashed #ccc;
-        height: 150px;
-        position: relative;
+        padding: 10px;
     }
 
-    .plus-icon {
+    .card img.preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .card:hover img.preview-image {
+        transform: scale(1.05);
+    }
+
+    .card-content {
+        padding: 15px;
+        text-align: left;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 120px;
+
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 8px;
+        line-height: 1.2;
+        min-height: 40px;
+        /* Ensures titles always occupy space */
+        display: flex;
+        align-items: center;
+        /* Aligns text properly */
+    }
+
+    .card-description {
+        font-size: 1rem;
+        ` color: #555;
+        margin-top: 4px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        max-height: 4.5em;
+        min-height: 70px;
+    }
+
+    /* Kebab Menu Fix */
+    .kebab-menu {
         position: absolute;
-        color: #aaa;
-        font-size: 3rem;
-        pointer-events: none;
-        top: 50%;
-        /* Vertically centered */
-        left: 50%;
-        /* Horizontally centered */
-        transform: translate(-50%, -50%);
-        /* Adjusts the element to be perfectly centered */
+        top: 10px;
+        right: 10px;
+    }
+
+    .button.is-white {
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    .button.is-white:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+
+    /* Modal Customizations */
+    .modal-card {
+        border-radius: 8px;
     }
 
     .modal-image-preview {
-        display: block;
-        width: auto;
         max-width: 100%;
         height: auto;
-        max-height: 150px;
-        object-fit: contain;
-        margin-bottom: 5px;
-        /* Reduce space below the image */
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .modal-body {
@@ -60,14 +111,11 @@
         flex-direction: column;
         align-items: center;
         padding: 10px;
-        /* Adjust padding */
     }
 
     #file-input {
         margin-top: 0;
-        /* Ensure no extra space above the file input */
         padding-top: 0;
-        /* Remove unnecessary padding */
     }
 </style>
 
@@ -114,31 +162,17 @@
 
     <div class="columns is-multiline" id="card-container">
 
-        <!-- Card Start -->
+        <?php foreach ($institutions as $institution): ?>
         <div class="column is-one-fifth-desktop is-half-tablet is-full-mobile">
-            <div class="card card-link">
-
+            <div class="card">
                 <div class="card-image">
-                    <label class="image-upload" onclick="event.stopPropagation();">
-                        <input type="file" accept="image/*" onchange="previewImage(event, this)">
-                        <figure class="image is-4by3 image-upload-placeholder">
-                            <span class="plus-icon"><i class="fas fa-plus"></i></span>
-                            <img src="https://via.placeholder.com/200x150?text=Upload+Image" alt="Institution Image"
-                                class="preview-image" onclick="triggerFileInput(this)">
-
-                        </figure>
-                    </label>
+                    <img src="<?= !empty($institution['image']) ? base_url($institution['image']) : 'https://via.placeholder.com/200x150?text=No+Image' ?>"
+                        alt="Institution Image" class="preview-image">
                 </div>
 
-                <a href="<?= base_url('institution/details') ?>" class="card-content">
-                    <p class="title is-5 card-title">West Visayas State University</p>
-                    <p class="subtitle is-6 card-description">La Paz, Iloilo</p>
-                </a>
-
-                <!-- Kebab Menu -->
-                <div class="dropdown is-right kebab-menu" onclick="event.stopPropagation();">
+                <div class="dropdown is-right kebab-menu">
                     <div class="dropdown-trigger">
-                        <button class="button is-white is-small" aria-haspopup="true">
+                        <button class="button is-white is-small">
                             <span class="icon is-small">
                                 <i class="fas fa-ellipsis-v"></i>
                             </span>
@@ -146,62 +180,34 @@
                     </div>
                     <div class="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a href="#" class="dropdown-item" onclick="openEditModal(this); return false;"> ✏️ Edit</a>
-
-                            <a href="#" class="dropdown-item has-text-danger" onclick="confirmDelete(this)">
-                                🗑️ Delete
-                            </a>
-
+                            <a href="<?= base_url('institution/edit/' . $institution['id']) ?>" class="dropdown-item">✏️
+                                Edit</a>
+                            <a href="<?= base_url('institution/delete/' . $institution['id']) ?>"  class="dropdown-item has-text-danger" onclick="confirmDelete(this)">🗑️
+                                Delete</a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Institution Details -->
+                <div class="card-content">
+                    <p class="card-title">
+                        <a href="<?= base_url('institution/view/' . $institution['id']) ?>" class="institution-link">
+                            <?= esc($institution['name']) ?> (<?= esc($institution['abbreviation']) ?>)
+                        </a>
+                    </p>
+                    <p class="card-description">
+                        <?= esc($institution['street']) ?>, <?= esc($institution['barangay']) ?>,
+                        <?= esc($institution['municipality']) ?>, <?= esc($institution['province']) ?>
+                    </p>
+                </div>
             </div>
         </div>
-        <!-- Card End -->
+        <?php endforeach; ?>
 
-    </div>
+
     </div>
     </section>
 
-    <!-- Modal for Editing -->
-    <div class="modal" id="edit-modal">
-        <div class="modal-background" onclick="closeEditModal()"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Edit Card</p>
-                <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="field">
-                    <label class="label">Change Image</label>
-                    <div class="control">
-                        <figure class="image is-4by3">
-                            <img id="modal-image-preview"
-                                src="https://via.placeholder.com/300x200.png?text=Upload+Image">
-                        </figure>
-                        <input type="file" accept="image/*" id="modal-image-input" onchange="previewModalImage(event)">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Title</label>
-                    <div class="control">
-                        <input class="input" type="text" id="edit-title">
-                    </div>
-                </div>
-                <div class="field">
-                    <label class="label">Description</label>
-                    <div class="control">
-                        <textarea class="textarea" id="edit-description"></textarea>
-                    </div>
-                </div>
-            </section>
-            <footer class="modal-card-foot">
-                <button class="button is-success" onclick="saveCardEdit()">Save</button>
-                <button class="button" onclick="closeEditModal()">Cancel</button>
-            </footer>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script>
@@ -219,71 +225,20 @@
             window.location.href = url;
         }
 
-        // Open modal and populate fields
-        function openEditModal(element) {
-            let card = element.closest('.card'); // Get the card container
-            if (!card) return; // Exit if no card is found
-
-            currentEditingCard = card;
-            document.getElementById('edit-title').value = card.querySelector('.card-title').innerText;
-            document.getElementById('edit-description').value = card.querySelector('.card-description').innerText;
-            document.getElementById('modal-image-preview').src = card.querySelector('.preview-image').src;
-
-            document.getElementById('edit-modal').classList.add('is-active');
-        }
-
-        // Close modal
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.remove('is-active');
-        }
-
-        // Preview image inside modal
-        function previewModalImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('modal-image-preview').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Apply changes to the card
-        function saveCardEdit() {
-            if (currentEditingCard) {
-                currentEditingCard.querySelector('.card-title').innerText = document.getElementById('edit-title').value;
-                currentEditingCard.querySelector('.card-description').innerText = document.getElementById('edit-description').value;
-                currentEditingCard.querySelector('.preview-image').src = document.getElementById('modal-image-preview').src;
-            }
-            closeEditModal();
-        }
-
-        // Image preview on card itself
-        function previewImage(event, input) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    input.closest('.card-image').querySelector('.preview-image').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
 
         // Delete card
         function confirmDelete(index) {
-        let modal = document.getElementById("confirmModal");
-        modal.classList.add("custom-modal-active");
+            let modal = document.getElementById("confirmModal");
+            modal.classList.add("custom-modal-active");
 
-        document.getElementById("confirmText").innerText = "Are you sure you want to delete?";
+            document.getElementById("confirmText").innerText = "Are you sure you want to delete?";
 
-        document.getElementById("confirmYes").onclick = function () {
-            scientists.splice(index, 1);
-            closeModal();
-            renderCarousel();
-        };
-    }
+            document.getElementById("confirmYes").onclick = function () {
+                scientists.splice(index, 1);
+                closeModal();
+                renderCarousel();
+            };
+        }
         // Kebab menu toggle
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.dropdown-trigger button').forEach(button => {
