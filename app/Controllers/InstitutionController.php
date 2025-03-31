@@ -260,7 +260,14 @@ class InstitutionController extends BaseController
             ->get()
             ->getRowArray();
 
-        $research_projects = $db->table('research_projects as rp')
+        $completed_research_projects = $db->table('research_projects as rp')
+            ->select('rp.name as research_project_name, rp.description, rp.status, rp.sector, rp.project_objectives, rp.duration, rp.project_leader, rp.approved_amount')
+            ->where('rp.institution_id', $id)
+            ->where('rp.status', 'Completed')
+            ->get()
+            ->getResultArray();
+
+        $ongoing_research_projects = $db->table('research_projects as rp')
             ->select('rp.name as research_project_name, rp.description, rp.status, rp.sector, rp.project_objectives, rp.duration, rp.project_leader, rp.approved_amount')
             ->where('rp.institution_id', $id)
             ->where('rp.status', 'Ongoing')
@@ -276,8 +283,10 @@ class InstitutionController extends BaseController
             'nrcp_members' => $nrcp_members,
             'balik_scientists' => $balik_scientists,
             'consortium' => $consortium,
-            'research_projects' => $research_projects
+            'completed_research_projects' => $completed_research_projects,
+            'ongoing_research_projects' => $ongoing_research_projects
         ]);
+
     }
 
 }
