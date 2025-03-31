@@ -36,7 +36,7 @@ $routes->post('/directory/business_sector/store', 'NgoController::businessSector
 $routes->get('/directory/wide_contacts', 'WideContactController::wideContacts');
 
 
-// INSTITUTION //
+// Institution Main //
 $routes->get('/institution/home', 'InstitutionController::index');
 $routes->get('/institution/create', 'InstitutionController::create_institution');
 $routes->post('/institution/store', 'InstitutionController::storeInstitution');
@@ -45,6 +45,7 @@ $routes->post('/institution/update/(:num)', 'InstitutionController::update/$1');
 $routes->get('/institution/delete/(:num)', 'InstitutionController::delete/$1');
 $routes->get('institution/view/(:num)', 'InstitutionController::view/$1');
 
+//Institution Projects//
 $routes->get('/institution/projects/index', 'ProjectsController::projects');
 $routes->get('/institution/projects/create', 'ProjectsController::create');
 $routes->post('/institution/projects/store', 'ProjectsController::storeProjects');
@@ -53,8 +54,24 @@ $routes->post('/institution/projects/update/(:num)', 'ProjectsController::update
 $routes->get('/institution/projects/delete/(:num)', 'ProjectsController::delete/$1');
 $routes->get('institution/projects/view/(:num)', 'ProjectsController::view/$1');
 
+//Institution Balik Scientist//
+$routes->get('/institution/balik_scientist/index', 'BalikScientistController::balik_scientist');
+$routes->get('/institution/balik_scientist/create', 'BalikScientistController::create');
+$routes->post('/institution/balik_scientist/store', 'BalikScientistController::store');
+$routes->get('/institution/balik_scientist/edit/(:num)', 'BalikScientistController::edit/$1');
+$routes->post('/institution/balik_scientist/update/(:num)', 'BalikScientistController::update/$1');
+$routes->get('/institution/balik_scientist/delete/(:num)', 'BalikScientistController::delete/$1');
+$routes->get('institution/balik_scientist/view/(:num)', 'BalikScientistController::view/$1');
 
-$routes->get('/institution/balik_scientist', 'BalikScientistController::balik_scientist');
-$routes->get('/institution/consortium', 'ConsortiumController::consortium');
+//Instutions NRCP
+$routes->get('/institution/nrcp_members/index', 'NrcpController::nrcp_members');
+$routes->get('/institution/nrcp_members/create', 'NrcpController::create');
+$routes->post('/institution/nrcp_members/store', 'NrcpController::store');
+
+//Institutions Consorsium
+$routes->get('/institution/consortium/index', 'ConsortiumController::consortium');
+$routes->get('/institution/consortium/create', 'ConsortiumController::create');
+$routes->post('/institution/consortium/store', 'ConsortiumController::store');
+
 $routes->get('/institution/ncrp_members', 'NcrpController::ncrp_members');
 $routes->get('/institution/research_centers', 'ResearchCentersController::research_centers');
