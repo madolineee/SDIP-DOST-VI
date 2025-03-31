@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/directory-layout') ?>
+<?= $this->extend('layouts/header-layout') ?>
 <?= $this->section('content') ?>
 
 <style>
@@ -299,6 +299,7 @@
                                         <select class="select-overlay"
                                             onchange="document.getElementById('type').value=this.value">
                                             <option value=""></option>
+                                            <option value="State">State</option>
                                             <option value="University">University</option>
                                             <option value="College">College</option>
                                             <option value="Training Center">Training Center</option>
@@ -315,7 +316,7 @@
                                 <label class="label">Honorifics</label>
                                 <div class="control">
                                     <div class="select-input-container">
-                                        <input type="text" id="hon" name="honorifics" class="input"
+                                        <input type="text" id="honorifics" name="honorifics" class="input"
                                             value="<?= $institution['honorifics'] ?? '' ?>">
                                         <select class="select-overlay"
                                             onchange="document.getElementById('hon').value=this.value">
@@ -344,7 +345,7 @@
                             <div class="field">
                                 <label class="label">Middle Initial</label>
                                 <div class="control">
-                                    <input type="text" name="first_name" class="input"
+                                    <input type="text" name="middle_name" class="input"
                                         value="<?= $institution['middle_name'] ?? '' ?>" required>
                                 </div>
                             </div>

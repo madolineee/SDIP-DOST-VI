@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/directory-layout') ?>
+<?= $this->extend('layouts/header-layout') ?>
 <?= $this->section('content') ?>
 
 <style>
@@ -248,11 +248,44 @@
                 <button class="delete" id="close-modal" aria-label="close"></button>
             </header>
             <section class="modal-card-body">
-                <form id="projects-form" action="<?= site_url('institution/projects/update/' . $project['project_id']) ?>" method="post" enctype="multipart/form-data">
+                <form id="projects-form"
+                    action="<?= site_url('institution/projects/update/' . $project['project_id']) ?>" method="post"
+                    enctype="multipart/form-data">
                     <?= csrf_field() ?>
 
                     <div class="columns">
-                        <!-- Institution Selection -->
+                        <!-- Sector -->
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Sector</label>
+                                <div class="control">
+                                    <div class="select-input-container">
+                                        <input type="text" id="sector" name="sector" class="input"
+                                            value="<?= old('sector', $project['sector'] ?? '') ?>"
+                                            placeholder="Or enter manually" list="sector-list">
+                                        <select class="select-overlay">
+                                            <option value=""></option>
+                                            <option value="Health Research and Development">Health Research and
+                                                Development</option>
+                                            <option value="Industry, Energy, and Emerging Technologies">Industry,
+                                                Energy, and Emerging Technologies</option>
+                                            <option value="Agriculture, Aquatic, and Natural Resources">Agriculture,
+                                                Aquatic, and Natural Resources</option>
+                                            <option value="Disaster Risk Reduction and Climate Change Adaptation">
+                                                Disaster Risk Reduction and Climate Change Adaptation</option>
+                                            <option value="Space Technology Applications">Space Technology Applications
+                                            </option>
+                                            <option value="Environment and Natural Resources">Environment and Natural
+                                                Resources</option>
+                                            <option value="Food Safety and Nutrition">Food Safety and Nutrition</option>
+                                            <option value="Basic Research">Basic Research</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Institution -->
                         <div class="column">
                             <div class="field">
                                 <label class="label">Institution</label>
@@ -261,7 +294,8 @@
                                         <select name="institution" required>
                                             <option value="">Select Institution</option>
                                             <?php foreach ($institutions as $institution): ?>
-                                                <option value="<?= $institution['id'] ?>" <?= ($institution['id'] == $project['institution_id']) ? 'selected' : '' ?>>
+                                                <option value="<?= $institution['id'] ?>"
+                                                    <?= ($institution['id'] == $project['institution_id']) ? 'selected' : '' ?>>
                                                     <?= $institution['name'] ?>
                                                 </option>
                                             <?php endforeach; ?>
@@ -271,27 +305,16 @@
                             </div>
                         </div>
 
-                        <!-- Research Title -->
-                        <div class="column">
-                            <div class="field">
-                                <label class="label">Research Title</label>
-                                <div class="control">
-                                    <input type="text" name="research_name" class="input" value="<?= old('name', $project['research_name'] ?? '') ?>" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        
-
                         <!-- Status -->
                         <div class="column">
                             <div class="field">
                                 <label class="label">Status</label>
                                 <div class="control">
                                     <div class="select-input-container">
-                                        <input type="text" id="current_status" name="status" class="input" 
-                                            value="<?= old('status', $project['status'] ?? '') ?>" placeholder="Or enter manually">
-                                        <select class="select-overlay" 
+                                        <input type="text" id="current_status" name="status" class="input"
+                                            value="<?= old('status', $project['status'] ?? '') ?>"
+                                            placeholder="Or enter manually">
+                                        <select class="select-overlay"
                                             onchange="document.getElementById('current_status').value=this.value">
                                             <option value=""></option>
                                             <option value="Completed" <?= ($project['status'] == 'Completed') ? 'selected' : '' ?>>Completed</option>
@@ -304,13 +327,77 @@
                         </div>
                     </div>
 
+                    <div class="columns">
+
+
+                        <!-- Duration -->
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Duration</label>
+                                <div class="control">
+                                    <input type="text" name="duration" class="input"
+                                        value="<?= old('duration', $project['duration'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Leader -->
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Project Leader</label>
+                                <div class="control">
+                                    <input type="text" name="project_leader" class="input"
+                                        value="<?= old('project_leader', $project['project_leader'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Approved Amount -->
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Approved Amount</label>
+                                <div class="control">
+                                    <input type="text" name="approved_amount" class="input"
+                                        value="<?= old('approved_amount', $project['approved_amount'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Title -->
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Research Title</label>
+                                <div class="control">
+                                    <input type="text" name="research_name" class="input"
+                                        value="<?= old('name', $project['research_name'] ?? '') ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Description -->
                     <div class="columns">
                         <div class="column is-full">
                             <div class="field">
                                 <label class="label">Description</label>
                                 <div class="control">
-                                    <textarea name="description" class="textarea" required><?= old('description', $project['description'] ?? '') ?></textarea>
+                                    <textarea name="description" class="textarea"
+                                        required><?= old('description', $project['description'] ?? '') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Objectives -->
+                    <div class="columns">
+                        <div class="column is-full">
+                            <div class="field">
+                                <label class="label">Research Objectives</label>
+                                <div class="control">
+                                    <textarea name="project_objectives" class="textarea"
+                                        required><?= old('project_objectives', $project['project_objectives'] ?? '') ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -320,6 +407,7 @@
                         <button type="submit" class="button is-success">Update</button>
                     </section>
                 </form>
+
             </section>
         </div>
     </div>

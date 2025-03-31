@@ -4,7 +4,7 @@
 
 <style>
     body {
-        background-color: #fff ;
+        background-color: #fff;
     }
 
 
@@ -45,6 +45,10 @@
         background-color: #ffc107;
         color: white;
     }
+
+    .dropdown-trigger {
+        margin-top: 36px; /* Adjust the ellipsis alignment */
+    }
 </style>
 
 
@@ -58,12 +62,14 @@
         </div>
 
 
+        <!-- Dropdown -->
         <div class="control">
-            <div class="select is-smaller" style="width: 200px;">
-                <select id="categoryDropdown" onchange="navigateToCategory()">
+            <div class="select is-smaller" style="width: 200px; height: 36px; display: flex; align-items: center;">
+                <select id="categoryDropdown" onchange="navigateToCategory()" style="height: 100%;">
                     <option value="<?= base_url('institution/home') ?>">All</option>
-                    <option value="<?= base_url('institution/research_centers/index') ?>">Research Centers</option>
-                    <option value="<?= base_url('institution/consortium/index') ?>">Consortium</option>
+                    <option value="<?= base_url('institution/research_centers/index') ?>">Research, Development and
+                        Innovation Centers</option>
+                    <option value="<?= base_url('institution/consortium/index') ?>">Consortium Membership</option>
                     <option value="<?= base_url('institution/projects/index') ?>">R&D Projects</option>
                     <option value="<?= base_url('institution/balik_scientist/index') ?>">Balik Scientists</option>
                     <option value="<?= base_url('institution/ncrp_members/index') ?>">NCRP Members</option>
@@ -71,24 +77,27 @@
             </div>
         </div>
 
-
+        <!-- Download Button -->
         <div class="control">
-            <button class="button is-light is-small">
-                <span class="icon"><i class="fas fa-download"></i></span>
+            <button class="button is-light is-small" style="height: 36px; display: flex; align-items: center;">
+                <span class="icon">
+                    <i class="fas fa-download"></i>
+                </span>
             </button>
         </div>
     </div>
 
-
     <div class="box mt-4">
         <h2 class="title is-4">Research Projects</h2>
         <p>Completed / Pending / Ongoing</p>
-
+        <br>
 
         <?php if (!empty($research_projects)): ?>
             <?php foreach ($research_projects as $project): ?>
-                <div class="box is-flex is-justify-content-space-between is-align-items-center">
+                <div class="box is-flex is-justify-content-space-between is-align-items-center" style="cursor: pointer;"
+                    onclick="window.location.href='<?= base_url('institution/projects/view/' . $project['id']) ?>'">
                     <div>
+
                         <strong><?= esc($project['name']) ?></strong>
                         <p><?= esc($project['description']) ?></p>
 
@@ -96,52 +105,48 @@
                         <?php
                         $statusClass = '';
                         $statusIcon = '';
-                       
+
                         if (strtolower(trim($project['status'])) == 'completed') {
                             $statusClass = 'completed';
-                            $statusIcon = '<i class="fas fa-check-circle"></i>'; // Font Awesome check icon
+                            $statusIcon = '<i class="fas fa-check-circle"></i>';
+
                         } elseif (strtolower(trim($project['status'])) == 'pending') {
                             $statusClass = 'pending';
-                            $statusIcon = '<i class="fas fa-clock"></i>'; // Font Awesome clock icon
+                            $statusIcon = '<i class="fas fa-clock"></i>';
+
                         } elseif (strtolower(trim($project['status'])) == 'ongoing') {
                             $statusClass = 'ongoing';
-                            $statusIcon = '<i class="fas fa-spinner"></i>'; // Font Awesome spinner icon
+                            $statusIcon = '<i class="fas fa-spinner"></i>';
                         }
-                       
+
                         ?>
+
                         <span class="status-badge <?= $statusClass ?>">
-                            <?= $statusIcon ?> <?= strtoupper($project['status']) ?>
+                            <?= $statusIcon ?>         <?= strtoupper($project['status']) ?>
                         </span>
                     </div>
-
-
-                    <div class="is-flex is-align-items-center">
-                        <div class="dropdown is-hoverable is-right mr-2">
+                    <div class="is-flex is-align-items-center" onclick="event.stopPropagation();">
+                        <div class="dropdown is-hoverable is-right">
                             <div class="dropdown-trigger">
                                 <button class="button is-white is-small">
                                     <span class="icon is-small">
-                                        <i class="fas fa-info-circle"></i>
+                                        <i class="fas fa-ellipsis-v"></i>
                                     </span>
                                 </button>
                             </div>
                             <div class="dropdown-menu">
                                 <div class="dropdown-content">
-                                    <a href="<?= base_url('institution/projects/edit/' . $project['id']) ?>" class="dropdown-item edit-button">
+                                    <a href="<?= base_url('institution/projects/edit/' . $project['id']) ?>"
+                                        class="dropdown-item edit-button">
                                         Edit
                                     </a>
-                                    <a href="<?= base_url('institution/projects/delete/' . $project['id']) ?>" class="dropdown-item has-text-danger">
+                                    <a href="<?= base_url('institution/projects/delete/' . $project['id']) ?>"
+                                        class="dropdown-item has-text-danger">
                                         Delete
                                     </a>
                                 </div>
                             </div>
                         </div>
-
-
-                        <a href="<?= base_url('institution/projects/view/' . $project['id']) ?>" class="button is-white is-small">
-                            <span class="icon">
-                                <i class="fas fa-angle-double-right"></i>
-                            </span>
-                        </a>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -149,7 +154,6 @@
             <p>No research projects found.</p>
         <?php endif; ?>
     </div>
-
 
     <script>
         function navigateToCategory() {
@@ -162,10 +166,4 @@
     </script>
 </body>
 
-
 <?= $this->endSection() ?>
-
-
-
-
-

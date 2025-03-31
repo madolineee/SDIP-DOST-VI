@@ -169,7 +169,7 @@
 <body>
     <div class="field is-flex is-align-items-center is-justify-content-flex-end" style="width: 100%; gap: 10px;">
         <div class="control">
-            <a href="<?= base_url('institution/balik_scientist/create') ?>" class="button is-primary">
+            <a href="<?= base_url('institution/consortium/create') ?>" class="button is-primary">
                 <span class="icon"><i class="fas fa-plus"></i></span>
                 <span>Create New</span>
             </a>
@@ -201,79 +201,81 @@
         </div>
     </div>
 
-    <h2>DOST VI Balik Scientist</h2>
+    <h2>DOST VI Consortium</h2>
 
-    <div class="carousel">
-        <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
-        <div class="carousel-container" id="carouselContainer">
-            <?php if (!empty($balik_scientists)): ?>
-                <?php foreach ($balik_scientists as $scientist): ?>
-                    <div class="carousel-item">
-                    <img src="<?= !empty($scientist['image']) ? base_url($scientist['image']) : '/images/profile.png' ?>"
-    alt="<?= esc($scientist['first_name']) ?>" width="100%">
-
-
-                        <h3 style="font-size: 14px; margin-top: 6px;">
-                            <?= esc($scientist['honorifics']) . ' ' . esc($scientist['first_name']) . ' ' . esc($scientist['middle_name']) . ' ' . esc($scientist['last_name']) ?>
-                        </h3>
-
-                        <p style="font-size: 12px; margin-top: 4px;">
-                            <?= esc($scientist['description']) ?>
-                        </p>
-
-                        <small>Institution: <?= esc($scientist['institution_name']) ?></small>
-
-                        <!-- Dropdown Menu -->
-                        <div class="dropdown">
-                            <button onclick="toggleDropdown(event, this)">⋮</button>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-content">
-                                    <a href="<?= base_url('institution/balik_scientist/edit/' . esc($scientist['id'])) ?>"
-                                        class="dropdown-item has-text-link">
-                                        ✏️ Edit
+    <!-- Table Section -->
+    <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Institution</th>
+                    <th class="has-text-centered">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($consortiums)): ?>
+                    <?php foreach ($consortiums as $consortium): ?>
+                        <tr>
+                            <td><?= esc($consortium->consortium_name ?? 'N/A') ?></td> <!-- Now works correctly -->
+                            <td><?= esc($consortium->institution_name ?? '') ?></td>
+                            <td class="has-text-centered">
+                                <div class="buttons is-flex is-justify-content-center is-align-items-center" style="gap: 10px;">
+                                    <a href="<?= site_url('/directory/consortiums/edit/' . $consortium->consortium_id) ?>"
+                                        class="button is-info is-small"
+                                        style="margin-left: 8px; min-width: 120px; display: flex; justify-content: center; align-items: center;">
+                                        <span class="icon"><i class="fas fa-edit"></i></span>
+                                        <span>Edit</span>
                                     </a>
-                                    <hr class="dropdown-divider">
-                                    <a href="#" class="dropdown-item has-text-danger"
-                                        onclick="confirmDelete(<?= esc($scientist['id']) ?>)">
-                                        🗑️ Delete
+                                    <a href="<?= site_url('consortiums/delete/' . $consortium->consortium_id); ?>"
+                                        class="button is-danger is-small"
+                                        style="min-width: 120px; display: flex; justify-content: center; align-items: center;"
+                                        onclick="return confirm('Are you sure you want to delete this regional office?');">
+                                        <span class="icon"><i class="fas fa-trash"></i></span>
+                                        <span>Delete</span>
                                     </a>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No scientists found.</p>
-            <?php endif; ?>
-        </div>
-        <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" class="has-text-centered has-text-grey-light">
+                            No regional offices found.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
+</body>
 
 
-    <script>
-        function scrollCarousel(direction) {
-            const container = document.getElementById("carouselContainer");
-            const scrollAmount = 280;
-            container.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
+
+<script>
+    function scrollCarousel(direction) {
+        const container = document.getElementById("carouselContainer");
+        const scrollAmount = 280;
+        container.scrollBy({ left: direction * scrollAmount, behavior: "smooth" });
+    }
+
+    function toggleDropdown(event, button) {
+        event.stopPropagation();
+        closeAllDropdowns();
+        button.parentElement.classList.toggle("active");
+    }
+
+    function closeAllDropdowns() {
+        document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
+    }
+
+    document.addEventListener("click", closeAllDropdowns);
+
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete this scientist?")) {
+            window.location.href = "<?= base_url('institution/consortium/delete/') ?>" + id;
         }
+    }
+</script>
 
-        function toggleDropdown(event, button) {
-            event.stopPropagation();
-            closeAllDropdowns();
-            button.parentElement.classList.toggle("active");
-        }
-
-        function closeAllDropdowns() {
-            document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("active"));
-        }
-
-        document.addEventListener("click", closeAllDropdowns);
-
-        function confirmDelete(id) {
-            if (confirm("Are you sure you want to delete this scientist?")) {
-                window.location.href = "<?= base_url('institution/balik_scientist/delete/') ?>" + id;
-            }
-        }
-    </script>
-
-    <?= $this->endSection() ?>
+<?= $this->endSection() ?>

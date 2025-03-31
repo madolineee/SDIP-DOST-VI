@@ -54,51 +54,6 @@
         padding: 15px;
         border-bottom: 2px solid #ddd;
     }
-
-    .media {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .media-left img {
-        border-radius: 50%;
-        width: 64px;
-        height: 64px;
-        object-fit: cover;
-    }
-
-    .file-container {
-        text-align: center;
-        padding: 30px;
-        border: 2px dashed #ccc;
-        border-radius: 10px;
-        margin-top: 20px;
-        background: #f9f9f9;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .file-container figure {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-    }
-
-    .file-container img {
-        width: 100px;
-        height: auto;
-    }
-
-    .file-upload {
-        margin-top: 5px;
-        display: flex;
-        justify-content: center;
-    }
 </style>
 
 <body>
@@ -110,12 +65,13 @@
                     <div class="media">
                         <div class="media-left">
                             <figure class="image is-64x64">
-                                <img id="InstitutionImage" src="/images/institution.png" alt="Profile Picture">
+                                <img src="<?= !empty($institution['image']) ? base_url($institution['image']) : 'https://via.placeholder.com/200x150?text=No+Image' ?>"
+                                    alt="Institution Image" class="preview-image">
                             </figure>
                         </div>
                     </div>
                     <div class="media-content">
-                        <h1 class="title is-5 has-text-weight-bold">West Visayas State University</h1>
+                        <h1 class="title is-5 has-text-weight-bold"><?= esc($institution['name']) ?></h1>
                     </div>
 
                     <!-- Spacer -->
@@ -152,20 +108,110 @@
                     </div>
                 </div>
 
+                <div class="box mt-4">
+                    <h2 class="title is-4 has-text-weight-bold">Institution Details</h2>
+                    <div class="card-content">
+                        <div class="content">
+                            <div class="columns">
+                                <!-- Left Column -->
+                                <div class="column is-6">
+                                    <p><strong>Type:</strong> <?= esc($institution['type']) ?></p>
+                                    <p><strong>Person Name:</strong> <?= esc($institution['person_name']) ?></p>
+                                    <p><strong>Designation:</strong> <?= esc($institution['designation']) ?></p>
+                                </div>
+                                <!-- Right Column -->
+                                <div class="column is-6">
+                                    <p><strong>Address:</strong> <?= esc($institution['street']) ?>,
+                                        <?= esc($institution['barangay']) ?>,
+                                        <?= esc($institution['municipality']) ?>,
+                                        <?= esc($institution['province']) ?>, <?= esc($institution['country']) ?>
+                                    </p>
+                                    <p><strong>Telephone:</strong> <?= esc($institution['telephone_num']) ?></p>
+                                    <p><strong>Email:</strong> <?= esc($institution['email_address']) ?></p>
+                                </div>
+                            </div>
+
+                            <?php if (!empty($consortium['consortium_name'])): ?>
+                                <h3 class="title is-5">Consortium</h3>
+                                <p><strong>Name:</strong> <?= esc($consortium['consortium_name']) ?></p>
+                            <?php endif; ?>
 
 
-                <!-- File Upload Section -->
-                <div class="box file-container">
-                    <figure class="image is-128x128">
-                        <img src="file-icon.png" id="uploadedFileIcon" alt="Institution Project">
-                    </figure>
-                    <p id="uploadedFileName" class="has-text-centered">No file uploaded</p>
+                            <!-- NRCP Members -->
+                            <?php if (!empty($nrcp_members)): ?>
+                                <h3 class="title is-5">NRCP Members</h3>
+                                <ul>
+                                    <?php foreach ($nrcp_members as $member): ?>
+                                        <li>
+                                            <strong><?= esc($member['honorifics'] . ' ' . $member['first_name'] . ' ' . $member['middle_name'] . ' ' . $member['last_name']) ?></strong>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
 
-                    <!-- File Upload Input -->
-                    <div class="file-upload">
-                        <input type="file" id="fileInput" class="button is-small is-link">
+
+                            <!-- Balik Scientist Engaged Members -->
+                            <?php if (!empty($balik_scientists)): ?>
+                                <h3 class="title is-5">Balik Scientist Engaged</h3>
+                                <ul>
+                                    <?php foreach ($balik_scientists as $scientist): ?>
+                                        <li>
+                                            <strong><?= esc($scientist['honorifics'] . ' ' . $scientist['first_name'] . ' ' . $scientist['middle_name'] . ' ' . $scientist['last_name']) ?></strong>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+
+
+                            <!-- Research Projects -->
+                            <?php if (!empty($research_projects)): ?>
+                                <h3 class="title is-5">Research Projects</h3>
+                                <?php foreach ($research_projects as $project): ?>
+                                    <strong>Name:</strong> <?= esc($project['research_project_name']) ?><br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+
+                            <h3 class="title is-5">Ongoing Research Projects</h3>
+                            <table class="table is-striped is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Sector</th>
+                                        <th>Title</th>
+                                        <th>Research Objectives</th>
+                                        <th>Duration</th>
+                                        <th>Project Leader</th>
+                                        <th>Approved Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($research_projects)): ?>
+                                        <?php foreach ($research_projects as $project): ?>
+                                            <tr>
+                                                <td><?= esc($project['sector'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
+                                                <td>
+                                                    <?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?>
+                                                </td>
+                                                <td><?= esc($project['duration'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="3" class="has-text-centered has-text-grey-light">
+                                                No ongoing projects
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
+            </div>
+        </div>
     </section>
 </body>
 

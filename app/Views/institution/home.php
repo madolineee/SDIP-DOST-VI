@@ -143,7 +143,7 @@
                     <option value="<?= base_url('institution/consortium/index') ?>">Consortium Membership</option>
                     <option value="<?= base_url('institution/projects/index') ?>">R&D Projects</option>
                     <option value="<?= base_url('institution/balik_scientist/index') ?>">Balik Scientists</option>
-                    <option value="<?= base_url('institution/ncrp_members/index') ?>">NCRP Members</option>
+                    <option value="<?= base_url('institution/nrcp_members/index') ?>">NCRP Members</option>
                 </select>
             </div>
         </div>
@@ -191,7 +191,7 @@
                 <!-- Institution Details -->
                 <div class="card-content">
                     <p class="card-title">
-                        <a href="<?= base_url('institution/view/' . $institution['id']) ?>" class="institution-link">
+                        <a href="<?= base_url(relativePath: 'institution/view/' . $institution['id']) ?>" class="institution-link">
                             <?= esc($institution['name']) ?> (<?= esc($institution['abbreviation']) ?>)
                         </a>
                     </p>

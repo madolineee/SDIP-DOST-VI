@@ -1,6 +1,7 @@
 <?= $this->extend('layouts/header-layout') ?>
 <?= $this->section('content') ?>
 
+
 <style>
     .modal-card-head,
     .modal-card-foot {
@@ -10,6 +11,7 @@
         padding: 0.75rem 1rem;
     }
 
+
     .modal-card-title {
         font-weight: 600;
         text-align: center;
@@ -18,10 +20,12 @@
         margin: 0;
     }
 
+
     .modal-card-body {
         padding: 1.5rem;
         background-color: #fff;
     }
+
 
     .image-placeholder {
         display: flex;
@@ -32,6 +36,7 @@
         position: relative;
         cursor: pointer;
     }
+
 
     .profile-image {
         width: 120px;
@@ -47,12 +52,14 @@
         background-color: #f0f0f0;
     }
 
+
     .profile-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
     }
+
 
     .edit-button {
         position: absolute;
@@ -69,13 +76,16 @@
         cursor: pointer;
     }
 
+
     .edit-button:hover {
         background: rgba(0, 0, 0, 0.8);
     }
 
+
     .hidden-input {
         display: none;
     }
+
 
     .profile-text {
         position: absolute;
@@ -85,9 +95,11 @@
         text-align: center;
     }
 
+
     #profile-preview.hidden {
         display: none;
     }
+
 
     .title {
         color: #363636;
@@ -96,12 +108,15 @@
         font-size: 1.1rem;
     }
 
+
     .title.is-5 {
         font-weight: 700;
         /* Makes the title bold */
         font-size: 1.25rem;
         color: #363636;
         margin-bottom: 0.5rem;
+
+
 
 
         font-size: 1.25rem;
@@ -112,11 +127,13 @@
         padding-bottom: 0.3rem;
     }
 
+
     .label {
         color: #555;
         font-weight: 500;
         margin-bottom: 0.25rem;
     }
+
 
     .input,
     .select select {
@@ -128,11 +145,13 @@
         box-shadow: none;
     }
 
+
     .input:focus,
     .select select:focus {
         border-color: #3273dc;
         box-shadow: 0 0 0 2px rgba(50, 115, 220, 0.2);
     }
+
 
     .button {
         border-radius: 4px;
@@ -141,66 +160,81 @@
         transition: background-color 0.2s, box-shadow 0.2s;
     }
 
+
     .button.is-success {
         background-color: #48c774;
         color: #fff;
     }
 
+
     .button.is-success:hover {
         background-color: #3dbb63;
     }
+
 
     .button.is-primary {
         background-color: #3273dc;
         color: #fff;
     }
 
+
     .button.is-primary:hover {
         background-color: #2759bd;
     }
+
 
     .button.is-success,
     .button.is-primary {
         box-shadow: none;
     }
 
+
     .field.has-addons .control .button {
         border-radius: 0 4px 4px 0;
         padding: 0.5rem 0.75rem;
     }
 
+
     .field.has-addons .control.is-expanded .input {
         border-radius: 4px 0 0 4px;
     }
+
 
     .has-text-right {
         text-align: right;
     }
 
+
     .columns.is-multiline .column {
         padding: 0.5rem;
     }
 
+
     .modal-background {
         background-color: rgba(0, 0, 0, 0.4);
     }
+
 
     .delete {
         color: #888;
         transition: color 0.2s;
     }
 
+
     .delete:hover {
         color: #ff3860;
     }
+
 
     .mt-4 {
         margin-top: 1.5rem;
     }
 
+
     #contact-info .field {
         margin-bottom: 1rem;
     }
+
 
     .select-input-container {
         position: relative;
@@ -209,11 +243,13 @@
         width: 100%;
     }
 
+
     .select-input-container input {
         flex: 1;
         padding-right: 2rem;
         /* Space for dropdown */
     }
+
 
     .select-overlay {
         position: absolute;
@@ -226,11 +262,13 @@
         width: 2rem;
     }
 
+
     @keyframes fadeIn {
         from {
             opacity: 0;
             transform: translateY(-10px);
         }
+
 
         to {
             opacity: 1;
@@ -240,25 +278,26 @@
 </style>
 
 
-<!-- Main Modal for Editing Balik Scientist -->
+<!-- Main Modal for Adding Balik Scientist -->
 <div class="modal is-active" id="main-modal">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Edit Balik Scientist</p>
+            <p class="modal-card-title">Add Balik Scientist</p>
             <button class="delete" id="close-modal" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
-            <form id="balik-scientist-form"
-                action="<?= site_url('/institution/balik_scientist/update/' . $scientist['id']) ?>" method="post"
+            <form id="balik-scientist-form" action="<?= site_url('/institution/nrcp_members/store') ?>" method="post"
                 enctype="multipart/form-data">
                 <?= csrf_field() ?>
+
 
                 <!-- Image Upload -->
                 <div class="image-placeholder" onclick="document.getElementById('image').click()">
                     <figure class="profile-image">
+                        <span id="profile-text" class="profile-text">Profile</span>
                         <img id="profile-preview"
-                            src="<?= base_url(($scientist['image'] ?? 'uploads/balik_scientists/default.png')) ?>">
+                            src="<?= base_url('uploads/' . ($scientist['image'] ?? 'default.png')) ?>">
                         <div class="edit-button">
                             <i class="fas fa-edit"></i>
                         </div>
@@ -267,56 +306,61 @@
                         onchange="previewImage(event)">
                 </div>
 
-                <!-- Institution, Honorifics, and Role - Properly Aligned -->
+
+                <!-- Institution Selection -->
                 <div class="columns">
-                    <div class="column is-one-third">
+                    <div class="column is-one-half">
+                        <!-- Multi-Choice Selection -->
                         <div class="field">
-                            <label class="label">Institution</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="institution" required>
-                                        <option value="">Select Institution</option>
-                                        <?php foreach ($institutions as $institution): ?>
-                                            <option value="<?= $institution->id ?>"
-                                                <?= ($institution->id == $scientist['institution_id']) ? 'selected' : '' ?>>
-                                                <?= $institution->name ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+                            <label class="label">Select Membership</label>
+                            <div class="control" style="display: flex; gap: 20px; align-items: center;">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="dynamic_choice[]" value="Balik Scientist"
+                                        onclick="generateFields()">
+                                    Balik Scientist
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="dynamic_choice[]" value="NRCP"
+                                        onclick="generateFields()">
+                                    NRCP
+                                </label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="column is-one-third">
-                        <div class="field">
+
+                    <!-- Honorifics and Role -->
+                    <div class="column is-one-quarter">
+                        <div class="field is-one-quarter">
                             <label class="label">Honorifics</label>
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="honorifics">
-                                        <option value="">Select Honorifics</option>
-                                        <option value="Mr." <?= ($scientist['honorifics'] == 'Mr.') ? 'selected' : '' ?>>
-                                            Mr.</option>
-                                        <option value="Ms." <?= ($scientist['honorifics'] == 'Ms.') ? 'selected' : '' ?>>
-                                            Ms.</option>
-                                        <option value="Dr." <?= ($scientist['honorifics'] == 'Dr.') ? 'selected' : '' ?>>
-                                            Dr.</option>
-                                        <option value="Prof." <?= ($scientist['honorifics'] == 'Prof.') ? 'selected' : '' ?>>Prof.</option>
+                                <div class="select-input-container">
+                                    <input type="text" id="honorifics" name="honorifics" class="input"
+                                        placeholder="Or enter manually">
+                                    <select class="select-overlay"
+                                        onchange="document.getElementById('honorifics').value=this.value">
+                                        <option value=""></option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="Dr.">Dr.</option>
+                                        <option value="Prof.">Prof.</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="column is-one-third">
+                    <div class="column is-one-quarter">
                         <div class="field">
                             <label class="label">Role</label>
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="role" required>
-                                        <option value="">Select Role</option>
-                                        <option value="Key Official" <?= ($scientist['role'] == 'Key Official') ? 'selected' : '' ?>>Key Official</option>
-                                        <option value="Scientist" <?= ($scientist['role'] == 'Scientist') ? 'selected' : '' ?>>Scientist</option>
+                                <div class="select-input-container">
+                                    <input type="text" id="role" name="role" class="input"
+                                        placeholder="Or enter manually" required>
+                                    <select class="select-overlay"
+                                        onchange="document.getElementById('role').value=this.value">
+                                        <option value=""></option>
+                                        <option value="Key Official">Key Official</option>
+                                        <option value="Scientist">Scientist</option>
                                     </select>
                                 </div>
                             </div>
@@ -331,8 +375,7 @@
                         <div class="field">
                             <label class="label">First Name</label>
                             <div class="control">
-                                <input type="text" name="first_name" class="input"
-                                    value="<?= esc($scientist['first_name']) ?>" required>
+                                <input type="text" name="first_name" class="input" required>
                             </div>
                         </div>
                     </div>
@@ -340,8 +383,7 @@
                         <div class="field">
                             <label class="label">Middle Initial</label>
                             <div class="control">
-                                <input type="text" name="middle_name" class="input"
-                                    value="<?= esc($scientist['middle_name']) ?>">
+                                <input type="text" name="middle_name" class="input">
                             </div>
                         </div>
                     </div>
@@ -349,24 +391,29 @@
                         <div class="field">
                             <label class="label">Last Name</label>
                             <div class="control">
-                                <input type="text" name="last_name" class="input"
-                                    value="<?= esc($scientist['last_name']) ?>" required>
+                                <input type="text" name="last_name" class="input" required>
                             </div>
                         </div>
                     </div>
+                </div>
+
+
+                <!-- Dynamic Fields Container -->
+                <div class="columns">
+                    <div id="dynamic-fields"></div>
                 </div>
 
                 <!-- Description -->
                 <div class="field">
                     <label class="label">Description</label>
                     <div class="control">
-                        <textarea name="description" class="textarea"
-                            required><?= esc($scientist['description']) ?></textarea>
+                        <textarea name="description" class="textarea" required></textarea>
                     </div>
                 </div>
 
+
                 <footer class="modal-card-foot is-flex is-justify-content-end">
-                    <button type="submit" class="button is-success">Update</button>
+                    <button type="submit" class="button is-success">Save</button>
                 </footer>
             </form>
         </section>
@@ -375,6 +422,56 @@
 
 
 <script>
+    function generateFields() {
+    let container = document.getElementById('dynamic-fields');
+    container.innerHTML = ''; // Clear previous fields
+
+    let selectedOptions = document.querySelectorAll('input[name="dynamic_choice[]"]:checked');
+
+    selectedOptions.forEach(option => {
+        let fieldContainer = document.createElement('div');
+        fieldContainer.classList.add('column', 'is-one-third'); // Adjust column size here
+
+        let fieldWrapper = document.createElement('div');
+        fieldWrapper.classList.add('field');
+
+        let label = document.createElement('label');
+        label.classList.add('label');
+        label.textContent = `Select Institution for ${option.value}`;
+
+        let selectWrapper = document.createElement('div');
+        selectWrapper.classList.add('control');
+
+        let selectDiv = document.createElement('div');
+        selectDiv.classList.add('select');
+
+        let select = document.createElement('select');
+        select.name = `institution_${option.value}`;
+        select.style.width = "100%"; // Ensure it takes full width
+
+        let defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select Institution';
+        select.appendChild(defaultOption);
+
+        let institutions = <?= json_encode($institutions) ?>; // Convert PHP array to JS
+        institutions.forEach(inst => {
+            let opt = document.createElement('option');
+            opt.value = inst.id;
+            opt.textContent = inst.name;
+            select.appendChild(opt);
+        });
+
+        selectDiv.appendChild(select);
+        selectWrapper.appendChild(selectDiv);
+        fieldWrapper.appendChild(label);
+        fieldWrapper.appendChild(selectWrapper);
+        fieldContainer.appendChild(fieldWrapper);
+        container.appendChild(fieldContainer);
+    });
+}
+
+
 
     function previewImage(event) {
         const file = event.target.files[0];
@@ -388,10 +485,12 @@
         }
     }
 
+
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".select-input-container").forEach(container => {
             let inputField = container.querySelector("input");
             let selectField = container.querySelector("select");
+
 
             selectField.addEventListener("change", function () {
                 if (this.value) {
@@ -400,6 +499,7 @@
                 }
             });
 
+
             inputField.addEventListener("input", function () {
                 if (this.value === "") {
                     selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
@@ -407,12 +507,14 @@
             });
         });
 
+
         document.getElementById("close-modal").addEventListener("click", function () {
-            window.location.href = "<?= base_url('institution/balik_scientist/index') ?>"; // Redirect to institution/home
+            window.location.href = "<?= base_url('institution/nrcp_members/index') ?>"; // Redirect to institution/home
         });
     });
 </script>
 
-</body>
+
+
 
 <?= $this->endSection() ?>

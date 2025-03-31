@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/directory-layout') ?>
+<?= $this->extend('layouts/header-layout') ?>
 <?= $this->section('content') ?>
 
 <style>
@@ -241,31 +241,32 @@
 
 
 <body>
-<!-- Main Modal for First Transaction -->
-<div class="modal is-active" id="main-modal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Add Institution</p>
-            <button class="delete" id="close-modal" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-            <form id="stakeholder-form" action="<?= site_url('institution/store') ?>" method="post"
-                enctype="multipart/form-data">
-                <?= csrf_field() ?>
+    <!-- Main Modal for First Transaction -->
+    <div class="modal is-active" id="main-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Add Institution</p>
+                <button class="delete" id="close-modal" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="stakeholder-form" action="<?= site_url('institution/store') ?>" method="post"
+                    enctype="multipart/form-data">
+                    <?= csrf_field() ?>
 
-                <!-- Image Upload -->
-                <div class="image-placeholder" onclick="document.getElementById('image').click()">
-                    <figure class="profile-image">
-                        <span id="profile-text" class="profile-text">Profile</span>
-                        <img id="profile-preview" src="<?= base_url('uploads/' . ($institution['image'] ?? 'default.png')) ?>" >
-                        <div class="edit-button">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                    </figure>
-                    <input type="file" id="image" name="image" accept="image/png, image/jpeg" class="hidden-input"
-                        onchange="previewImage(event)">
-                </div>
+                    <!-- Image Upload -->
+                    <div class="image-placeholder" onclick="document.getElementById('image').click()">
+                        <figure class="profile-image">
+                            <span id="profile-text" class="profile-text">Profile</span>
+                            <img id="profile-preview"
+                                src="<?= base_url('uploads/' . ($institution['image'] ?? 'default.png')) ?>">
+                            <div class="edit-button">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                        </figure>
+                        <input type="file" id="image" name="image" accept="image/png, image/jpeg" class="hidden-input"
+                            onchange="previewImage(event)">
+                    </div>
 
                     <div class="columns is-multiline">
                         <div class="column is-half">
@@ -296,6 +297,7 @@
                                         <select class="select-overlay"
                                             onchange="document.getElementById('type').value=this.value">
                                             <option value=""></option>
+                                            <option value="State">State</option>
                                             <option value="University">University</option>
                                             <option value="College">College</option>
                                             <option value="Training Center">Training Center</option>
@@ -312,10 +314,9 @@
                                 <label class="label">Honorifics</label>
                                 <div class="control">
                                     <div class="select-input-container">
-                                        <input type="text" id="honorifics" name="hon" class="input"
-                                            placeholder="Or enter manually">
-                                        <select class="select-overlay"
-                                            onchange="document.getElementById('honorifics').value=this.value">
+                                        <input type="text" id="honorifics" name="honorifics" class="input"
+                                            placeholder="Or enter manually" list="honorifics-list">
+                                        <select class="select-overlay">
                                             <option value=""></option>
                                             <option value="Mr.">Mr.</option>
                                             <option value="Ms.">Ms.</option>
@@ -361,7 +362,7 @@
                                     <input type="text" name="designation" class="input">
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
 
                         <div class="column is-half">
                             <div class="field">
@@ -448,20 +449,17 @@
     </div>
 
     <script>
-       function previewImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('profile-preview').src = e.target.result;
-                document.getElementById('profile-text').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                    document.getElementById('profile-text').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
         }
-    }
-        document.getElementById("close-modal").addEventListener("click", function () {
-            window.location.href = "<?= base_url('institution/home') ?>";
-        });
 
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".select-input-container").forEach(container => {

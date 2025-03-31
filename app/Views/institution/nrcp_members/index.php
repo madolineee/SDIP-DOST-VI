@@ -169,7 +169,7 @@
 <body>
     <div class="field is-flex is-align-items-center is-justify-content-flex-end" style="width: 100%; gap: 10px;">
         <div class="control">
-            <a href="<?= base_url('institution/balik_scientist/create') ?>" class="button is-primary">
+            <a href="<?= base_url('institution/nrcp_members/create') ?>" class="button is-primary">
                 <span class="icon"><i class="fas fa-plus"></i></span>
                 <span>Create New</span>
             </a>
@@ -201,40 +201,40 @@
         </div>
     </div>
 
-    <h2>DOST VI Balik Scientist</h2>
+    <h2>DOST VI NRCP Members</h2>
 
     <div class="carousel">
         <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
         <div class="carousel-container" id="carouselContainer">
-            <?php if (!empty($balik_scientists)): ?>
-                <?php foreach ($balik_scientists as $scientist): ?>
+            <?php if (!empty($nrcp_members)): ?>
+                <?php foreach ($nrcp_members as $nrcp): ?>
                     <div class="carousel-item">
-                    <img src="<?= !empty($scientist['image']) ? base_url($scientist['image']) : '/images/profile.png' ?>"
-    alt="<?= esc($scientist['first_name']) ?>" width="100%">
+                    <img src="<?= !empty($nrcp['image']) ? base_url($nrcp['image']) : '/images/profile.png' ?>"
+    alt="<?= esc($nrcp['first_name']) ?>" width="100%">
 
 
                         <h3 style="font-size: 14px; margin-top: 6px;">
-                            <?= esc($scientist['honorifics']) . ' ' . esc($scientist['first_name']) . ' ' . esc($scientist['middle_name']) . ' ' . esc($scientist['last_name']) ?>
+                            <?= esc($nrcp['honorifics']) . ' ' . esc($nrcp['first_name']) . ' ' . esc($nrcp['middle_name']) . ' ' . esc($nrcp['last_name']) ?>
                         </h3>
 
                         <p style="font-size: 12px; margin-top: 4px;">
-                            <?= esc($scientist['description']) ?>
+                            <?= esc($nrcp['description']) ?>
                         </p>
 
-                        <small>Institution: <?= esc($scientist['institution_name']) ?></small>
+                        <small>Institution: <?= esc($nrcp['institution_name']) ?></small>
 
                         <!-- Dropdown Menu -->
                         <div class="dropdown">
                             <button onclick="toggleDropdown(event, this)">⋮</button>
                             <div class="dropdown-menu">
                                 <div class="dropdown-content">
-                                    <a href="<?= base_url('institution/balik_scientist/edit/' . esc($scientist['id'])) ?>"
+                                    <a href="<?= base_url('institution/nrcp_members/edit/' . esc($nrcp['id'])) ?>"
                                         class="dropdown-item has-text-link">
                                         ✏️ Edit
                                     </a>
                                     <hr class="dropdown-divider">
                                     <a href="#" class="dropdown-item has-text-danger"
-                                        onclick="confirmDelete(<?= esc($scientist['id']) ?>)">
+                                        onclick="confirmDelete(<?= esc($nrcp['id']) ?>)">
                                         🗑️ Delete
                                     </a>
                                 </div>
@@ -243,7 +243,7 @@
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No scientists found.</p>
+                <p>No NCRP Members found.</p>
             <?php endif; ?>
         </div>
         <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
@@ -271,7 +271,7 @@
 
         function confirmDelete(id) {
             if (confirm("Are you sure you want to delete this scientist?")) {
-                window.location.href = "<?= base_url('institution/balik_scientist/delete/') ?>" + id;
+                window.location.href = "<?= base_url('institution/nrcp_members/delete/') ?>" + id;
             }
         }
     </script>
