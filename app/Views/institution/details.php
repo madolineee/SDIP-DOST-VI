@@ -54,6 +54,16 @@
         padding: 15px;
         border-bottom: 2px solid #ddd;
     }
+
+    .wide-column {
+        width: 23%;
+        /* Adjust as needed */
+    }
+
+    .narrow-column {
+        width: 11%;
+        /* Adjust as needed */
+    }
 </style>
 
 <body>
@@ -133,7 +143,9 @@
 
                             <?php if (!empty($consortium['consortium_name'])): ?>
                                 <h3 class="title is-5">Consortium</h3>
-                                <p><strong>Name:</strong> <?= esc($consortium['consortium_name']) ?></p>
+                                <ul>
+                                    <?= esc($consortium['consortium_name']) ?>
+                                </ul>
                             <?php endif; ?>
 
 
@@ -142,9 +154,7 @@
                                 <h3 class="title is-5">NRCP Members</h3>
                                 <ul>
                                     <?php foreach ($nrcp_members as $member): ?>
-                                        <li>
-                                            <strong><?= esc($member['honorifics'] . ' ' . $member['first_name'] . ' ' . $member['middle_name'] . ' ' . $member['last_name']) ?></strong>
-                                        </li>
+                                        <?= esc($member['honorifics'] . ' ' . $member['first_name'] . ' ' . $member['middle_name'] . ' ' . $member['last_name']) ?>
                                     <?php endforeach; ?>
                                 </ul>
                             <?php endif; ?>
@@ -155,43 +165,32 @@
                                 <h3 class="title is-5">Balik Scientist Engaged</h3>
                                 <ul>
                                     <?php foreach ($balik_scientists as $scientist): ?>
-                                        <li>
-                                            <strong><?= esc($scientist['honorifics'] . ' ' . $scientist['first_name'] . ' ' . $scientist['middle_name'] . ' ' . $scientist['last_name']) ?></strong>
-                                        </li>
+                                        <?= esc($scientist['honorifics'] . ' ' . $scientist['first_name'] . ' ' . $scientist['middle_name'] . ' ' . $scientist['last_name']) ?>
                                     <?php endforeach; ?>
                                 </ul>
                             <?php endif; ?>
 
 
                             <!-- Research Projects -->
-                            <?php if (!empty($research_projects)): ?>
-                                <h3 class="title is-5">Research Projects</h3>
-                                <?php foreach ($research_projects as $project): ?>
-                                    <strong>Name:</strong> <?= esc($project['research_project_name']) ?><br>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-
                             <h3 class="title is-5">Ongoing Research Projects</h3>
                             <table class="table is-striped is-hoverable is-fullwidth">
                                 <thead>
                                     <tr>
-                                        <th>Sector</th>
-                                        <th>Title</th>
-                                        <th>Research Objectives</th>
-                                        <th>Duration</th>
-                                        <th>Project Leader</th>
-                                        <th>Approved Amount</th>
+                                        <th class="narrow-column">Sector</th>
+                                        <th class="wide-column">Title</th>
+                                        <th class="wide-column">Research Objectives</th>
+                                        <th class="narrow-column">Duration</th>
+                                        <th class="narrow-column">Project Leader</th>
+                                        <th class="narrow-column">Approved Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (!empty($research_projects)): ?>
-                                        <?php foreach ($research_projects as $project): ?>
+                                    <?php if (!empty($ongoing_research_projects)): ?>
+                                        <?php foreach ($ongoing_research_projects as $project): ?>
                                             <tr>
                                                 <td><?= esc($project['sector'] ?? 'N/A') ?></td>
                                                 <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
-                                                <td>
-                                                    <?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?>
-                                                </td>
+                                                <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
                                                 <td><?= esc($project['duration'] ?? 'N/A') ?></td>
                                                 <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
                                                 <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
@@ -199,8 +198,42 @@
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="3" class="has-text-centered has-text-grey-light">
+                                            <td colspan="6" class="has-text-centered has-text-grey-light">
                                                 No ongoing projects
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+
+                            <h3 class="title is-5">Completed Research Projects</h3>
+                            <table class="table is-striped is-hoverable is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th class="narrow-column">Sector</th>
+                                        <th class="wide-column">Title</th>
+                                        <th class="wide-column">Research Objectives</th>
+                                        <th class="narrow-column">Duration</th>
+                                        <th class="narrow-column">Project Leader</th>
+                                        <th class="narrow-column">Approved Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($completed_research_projects)): ?>
+                                        <?php foreach ($completed_research_projects as $project): ?>
+                                            <tr>
+                                                <td><?= esc($project['sector'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
+                                                <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
+                                                <td><?= esc($project['duration'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
+                                                <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="6" class="has-text-centered has-text-grey-light">
+                                                No completed projects
                                             </td>
                                         </tr>
                                     <?php endif; ?>

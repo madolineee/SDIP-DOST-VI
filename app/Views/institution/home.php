@@ -117,6 +117,14 @@
         margin-top: 0;
         padding-top: 0;
     }
+
+    .institution-link{
+        color: black;
+    }
+
+    .institution-link:hover{
+        color: blue;
+    }
 </style>
 
 <body>
