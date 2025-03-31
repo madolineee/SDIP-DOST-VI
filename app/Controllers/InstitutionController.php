@@ -226,10 +226,10 @@ class InstitutionController extends BaseController
 
         $institution = $db->table('institutions as i')
             ->select('i.id as institution_id, i.type, i.image, 
-                  s.id as stakeholder_id, s.name, s.abbreviation, 
-                  s.street, s.barangay, s.municipality, s.province, s.country,
-                  p.id as person_id, p.honorifics, p.first_name, p.middle_name, p.last_name, p.designation,
-                  c.id as contact_id, c.telephone_num, c.email_address')
+              s.id as stakeholder_id, s.name, s.abbreviation, 
+              s.street, s.barangay, s.municipality, s.province, s.country,
+              p.id as person_id, CONCAT(p.honorifics, " ", p.first_name, " ", p.middle_name, " ", p.last_name) as person_name, p.designation,
+              c.id as contact_id, c.telephone_num, c.email_address')
             ->join('stakeholders as s', 's.id = i.stakeholder_id', 'left')
             ->join('stakeholder_members as sm', 'sm.stakeholder_id = s.id', 'left')
             ->join('persons as p', 'p.id = sm.person_id', 'left')
@@ -238,33 +238,48 @@ class InstitutionController extends BaseController
             ->get()
             ->getRowArray();
 
+
+        $nrcp_members = $db->table('nrcp_members as nrcp')
+            ->select('p.id, p.honorifics, p.first_name, p.middle_name, p.last_name')
+            ->join('persons as p', 'p.id = nrcp.person_id', 'left')
+            ->where('nrcp.institution_id', $id)
+            ->get()
+            ->getResultArray();
+
+        $balik_scientists = $db->table('balik_scientist_engaged as bse')
+            ->select('p.id, p.honorifics, p.first_name, p.middle_name, p.last_name')
+            ->join('persons as p', 'p.id = bse.person_id', 'left')
+            ->where('bse.institution_id', $id)
+            ->get()
+            ->getResultArray();
+
+        $consortium = $db->table('consortium_members as cm')
+            ->select('con.name as consortium_name')
+            ->join('consortiums as con', 'con.id = cm.consortium_id', 'left')
+            ->where('cm.institution_id', $id)
+            ->get()
+            ->getRowArray();
+
+        $research_projects = $db->table('research_projects as rp')
+            ->select('rp.name as research_project_name, rp.description, rp.status, rp.sector, rp.project_objectives, rp.duration, rp.project_leader, rp.approved_amount')
+            ->where('rp.institution_id', $id)
+            ->where('rp.status', 'Ongoing')
+            ->get()
+            ->getResultArray();
+
         if (!$institution) {
             return redirect()->to('/institution/home')->with('error', 'Institution not found.');
         }
 
-        return view('institution/details', ['institution' => $institution]);
+        return view('institution/details', [
+            'institution' => $institution,
+            'nrcp_members' => $nrcp_members,
+            'balik_scientists' => $balik_scientists,
+            'consortium' => $consortium,
+            'research_projects' => $research_projects
+        ]);
     }
 
 }
 
 
-// public function balik_scientist()
-// {
-//     return view('/institution/balik_scientist/index');
-// }
-// public function consortium()
-// {
-//     return view('/institution/consortium/index');
-// }
-// public function ncrp_members()
-// {
-//     return view('/institution/ncrp_members/index');
-// }
-// public function projects()
-// {
-//     return view('/institution/projects/index');
-// }
-// public function research_centers()
-// {
-//     return view('/institution/research_centers/index');
-// }
