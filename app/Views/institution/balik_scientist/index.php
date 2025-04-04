@@ -2,6 +2,24 @@
 <?= $this->section('content') ?>
 
 <style>
+    .buttons-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-bottom: 10px;
+        margin-top: -10px;
+    }
+
+    .title {
+        font-size: 2.2rem;
+        margin-top: 10px;
+        margin-bottom: 1px;
+    }
+
+    .box {
+        margin-top: 30px;
+    }
+
     h2 {
         text-align: center;
         font-size: 24px;
@@ -167,89 +185,75 @@
 
 
 <body>
-    <div class="field is-flex is-align-items-center is-justify-content-flex-end" style="width: 100%; gap: 10px;">
-        <div class="control">
-            <a href="<?= base_url('institution/balik_scientist/create') ?>" class="button is-primary">
-                <span class="icon"><i class="fas fa-plus"></i></span>
-                <span>Create New</span>
-            </a>
-        </div>
+    <div class="container">
+        <div class="box mt-4">
 
-
-        <!-- Dropdown -->
-        <div class="control">
-            <div class="select is-smaller" style="width: 200px; height: 36px; display: flex; align-items: center;">
-                <select id="categoryDropdown" onchange="navigateToCategory()" style="height: 100%;">
-                    <option value="<?= base_url('institution/home') ?>">All</option>
-                    <option value="<?= base_url('institution/research_centers/index') ?>">Research, Development and
-                        Innovation Centers</option>
-                    <option value="<?= base_url('institution/consortium/index') ?>">Consortium Membership</option>
-                    <option value="<?= base_url('institution/projects/index') ?>">R&D Projects</option>
-                    <option value="<?= base_url('institution/balik_scientist/index') ?>">Balik Scientists</option>
-                    <option value="<?= base_url('institution/ncrp_members/index') ?>">NCRP Members</option>
-                </select>
+            <div class="title">
+                <h1 class="title has-text-centered">DOST VI Balik Scientist</h1>
             </div>
-        </div>
 
-        <!-- Download Button -->
-        <div class="control">
-            <button class="button is-light is-small" style="height: 36px; display: flex; align-items: center;">
-                <span class="icon">
-                    <i class="fas fa-download"></i>
-                </span>
-            </button>
-        </div>
-    </div>
+            <!-- Buttons beside tabs -->
+            <div class="buttons-container">
+                <a href="<?= base_url('institution/balik_scientist/create') ?>" class="button is-primary">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span>Create New</span>
+                </a>
 
-    <h2>DOST VI Balik Scientist</h2>
+                <button class="button is-light">
+                    <span class="icon"><i class="fas fa-download"></i></span>
+                    <span>Download Template</span>
+                </button>
+            </div>
 
-    <div class="carousel">
-        <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
-        <div class="carousel-container" id="carouselContainer">
-            <?php if (!empty($balik_scientists)): ?>
-                <?php foreach ($balik_scientists as $scientist): ?>
-                    <div class="carousel-item">
-                    <img src="<?= !empty($scientist['image']) ? base_url($scientist['image']) : '/images/profile.png' ?>"
-    alt="<?= esc($scientist['first_name']) ?>" width="100%">
+            <div class="carousel">
+                <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
+                <div class="carousel-container" id="carouselContainer">
+                    <?php if (!empty($balik_scientists)): ?>
+                        <?php foreach ($balik_scientists as $scientist): ?>
+                            <div class="carousel-item">
+                                <img src="<?= !empty($scientist['image']) ? base_url($scientist['image']) : '/images/profile.png' ?>"
+                                    alt="<?= esc($scientist['first_name']) ?>" width="100%">
 
-
-                        <h3 style="font-size: 14px; margin-top: 6px;">
-                            <?= esc($scientist['honorifics']) . ' ' . esc($scientist['first_name']) . ' ' . esc($scientist['middle_name']) . ' ' . esc($scientist['last_name']) ?>
-                        </h3>
-
-                        <p style="font-size: 12px; margin-top: 4px;">
-                            <?= esc($scientist['description']) ?>
-                        </p>
-
-                        <small>Institution: <?= esc($scientist['institution_name']) ?></small>
-
-                        <!-- Dropdown Menu -->
-                        <div class="dropdown">
-                            <button onclick="toggleDropdown(event, this)">⋮</button>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-content">
-                                    <a href="<?= base_url('institution/balik_scientist/edit/' . esc($scientist['id'])) ?>"
-                                        class="dropdown-item has-text-link">
-                                        ✏️ Edit
+                                <p class="card-title">
+                                    <a href="<?= base_url('institution/balik_scientist/view/' . $scientist['id']) ?>"
+                                        class="scientist-link">
+                                        <?= esc($scientist['honorifics']) . ' ' . esc($scientist['first_name']) . ' ' . esc($scientist['middle_name']) . ' ' . esc($scientist['last_name']) ?>
                                     </a>
-                                    <hr class="dropdown-divider">
-                                    <a href="#" class="dropdown-item has-text-danger"
-                                        onclick="confirmDelete(<?= esc($scientist['id']) ?>)">
-                                        🗑️ Delete
-                                    </a>
+                                </p>
+
+                                <!-- <p style="font-size: 12px; margin-top: 4px;"> -->
+                                <!-- <?= esc($scientist['description']) ?> -->
+                                </p>
+
+                                <small><?= esc($scientist['institution_name']) ?></small>
+
+                                <!-- Dropdown Menu -->
+                                <div class="dropdown">
+                                    <button onclick="toggleDropdown(event, this)">⋮</button>
+                                    <div class="dropdown-menu">
+                                        <div class="dropdown-content">
+                                            <a href="<?= base_url('institution/balik_scientist/edit/' . esc($scientist['id'])) ?>"
+                                                class="dropdown-item has-text-link">
+                                                ✏️ Edit
+                                            </a>
+                                            <hr class="dropdown-divider">
+                                            <a href="#" class="dropdown-item has-text-danger"
+                                                onclick="confirmDelete(<?= esc($scientist['id']) ?>)">
+                                                🗑️ Delete
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No scientists found.</p>
-            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No scientists found.</p>
+                    <?php endif; ?>
+                </div>
+                <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
+            </div>
         </div>
-        <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
     </div>
-
-
     <script>
         function scrollCarousel(direction) {
             const container = document.getElementById("carouselContainer");
@@ -275,5 +279,6 @@
             }
         }
     </script>
+</body>
 
-    <?= $this->endSection() ?>
+<?= $this->endSection() ?>

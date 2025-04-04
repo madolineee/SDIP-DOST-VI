@@ -64,6 +64,11 @@
         width: 11%;
         /* Adjust as needed */
     }
+
+    /* Hide sections by default */
+    .section-content {
+        display: none;
+    }
 </style>
 
 <body>
@@ -91,25 +96,21 @@
                         <div class="control">
                             <div class="select is-smaller" style="width: 200px; padding: 6px;">
                                 <select id="categoryDropdown" onchange="navigateToCategory()">
-                                    <option value="<?= base_url('institution/home') ?>">All</option>
-                                    <option value="<?= base_url('institution/research_centers/index') ?>">Research,
-                                        Development
-                                        and Innovation Centers</option>
-                                    <option value="<?= base_url('institution/consortium/index') ?>">Consortium
-                                        Membership</option>
-                                    <option value="<?= base_url('institution/projects/index') ?>">R&D Projects</option>
-                                    <option value="<?= base_url('institution/balik_scientist/index') ?>">Balik
-                                        Scientists</option>
-                                    <option value="<?= base_url('institution/ncrp_members/index') ?>">NCRP Members
+                                    <option value="all">All</option>
+                                    <option value="research_centers">Research, Development and Innovation Centers
                                     </option>
+                                    <option value="consortium">Consortium Membership</option>
+                                    <option value="projects">Research Projects</option>
+                                    <option value="balik_scientist">Balik Scientists</option>
+                                    <option value="ncrp_members">NCRP Members</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- Download Button -->
                     <div class="control">
-
                         <button class="button is-light is-small">
                             <span class="icon">
                                 <i class="fas fa-download"></i>
@@ -119,10 +120,10 @@
                 </div>
 
                 <div class="box mt-4">
-                    <h2 class="title is-4 has-text-weight-bold">Institution Details</h2>
                     <div class="card-content">
                         <div class="content">
-                            <div class="columns">
+                            <div id="details" class="columns">
+                                <h3 class="title is-5">Instituion Details</h3>
                                 <!-- Left Column -->
                                 <div class="column is-6">
                                     <p><strong>Type:</strong> <?= esc($institution['type']) ?></p>
@@ -141,108 +142,115 @@
                                 </div>
                             </div>
 
-                            <?php if (!empty($consortium['consortium_name'])): ?>
-                                <h3 class="title is-5">Consortium</h3>
-                                <ul>
-                                    <?= esc($consortium['consortium_name']) ?>
-                                </ul>
-                            <?php endif; ?>
+                            <!-- Consortium Section -->
+                            <div id="consortium" class="section-content">
+                                <?php if (!empty($consortium['consortium_name'])): ?>
+                                    <h3 class="title is-5">Consortium</h3>
+                                    <ul>
+                                        <?= esc($consortium['consortium_name']) ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
 
-
-                            <!-- NRCP Members -->
-                            <?php if (!empty($nrcp_members)): ?>
-                                <h3 class="title is-5">NRCP Members</h3>
-                                <ul>
-                                    <?php foreach ($nrcp_members as $member): ?>
-                                        <?= esc($member['honorifics'] . ' ' . $member['first_name'] . ' ' . $member['middle_name'] . ' ' . $member['last_name']) ?>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
-
-
-                            <!-- Balik Scientist Engaged Members -->
-                            <?php if (!empty($balik_scientists)): ?>
-                                <h3 class="title is-5">Balik Scientist Engaged</h3>
-                                <ul>
-                                    <?php foreach ($balik_scientists as $scientist): ?>
-                                        <?= esc($scientist['honorifics'] . ' ' . $scientist['first_name'] . ' ' . $scientist['middle_name'] . ' ' . $scientist['last_name']) ?>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
-
-
-                            <!-- Research Projects -->
-                            <h3 class="title is-5">Ongoing Research Projects</h3>
-                            <table class="table is-striped is-hoverable is-fullwidth">
-                                <thead>
-                                    <tr>
-                                        <th class="narrow-column">Sector</th>
-                                        <th class="wide-column">Title</th>
-                                        <th class="wide-column">Research Objectives</th>
-                                        <th class="narrow-column">Duration</th>
-                                        <th class="narrow-column">Project Leader</th>
-                                        <th class="narrow-column">Approved Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($ongoing_research_projects)): ?>
-                                        <?php foreach ($ongoing_research_projects as $project): ?>
-                                            <tr>
-                                                <td><?= esc($project['sector'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
-                                                <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
-                                                <td><?= esc($project['duration'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
-                                            </tr>
+                            <!-- NRCP Members Section -->
+                            <div id="ncrp_members" class="section-content">
+                                <?php if (!empty($nrcp_members)): ?>
+                                    <h3 class="title is-5">NRCP Members</h3>
+                                    <ul>
+                                        <?php foreach ($nrcp_members as $member): ?>
+                                            <?= esc($member['honorifics'] . ' ' . $member['first_name'] . ' ' . $member['middle_name'] . ' ' . $member['last_name']) ?>
                                         <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="6" class="has-text-centered has-text-grey-light">
-                                                No ongoing projects
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
 
-                            <h3 class="title is-5">Completed Research Projects</h3>
-                            <table class="table is-striped is-hoverable is-fullwidth">
-                                <thead>
-                                    <tr>
-                                        <th class="narrow-column">Sector</th>
-                                        <th class="wide-column">Title</th>
-                                        <th class="wide-column">Research Objectives</th>
-                                        <th class="narrow-column">Duration</th>
-                                        <th class="narrow-column">Project Leader</th>
-                                        <th class="narrow-column">Approved Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($completed_research_projects)): ?>
-                                        <?php foreach ($completed_research_projects as $project): ?>
-                                            <tr>
-                                                <td><?= esc($project['sector'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
-                                                <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
-                                                <td><?= esc($project['duration'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
-                                                <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
-                                            </tr>
+                            <!-- Balik Scientist Engaged Section -->
+                            <div id="balik_scientist" class="section-content">
+                                <?php if (!empty($balik_scientists)): ?>
+                                    <h3 class="title is-5">Balik Scientist Engaged</h3>
+                                    <ul>
+                                        <?php foreach ($balik_scientists as $scientist): ?>
+                                            <?= esc($scientist['honorifics'] . ' ' . $scientist['first_name'] . ' ' . $scientist['middle_name'] . ' ' . $scientist['last_name']) ?>
                                         <?php endforeach; ?>
-                                    <?php else: ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Research Projects Section -->
+                            <div id="projects" class="section-content">
+                                <h3 class="title is-5">Ongoing Research Projects</h3>
+                                <table class="table is-striped is-hoverable is-fullwidth">
+                                    <thead>
                                         <tr>
-                                            <td colspan="6" class="has-text-centered has-text-grey-light">
-                                                No completed projects
-                                            </td>
+                                            <th class="narrow-column">Sector</th>
+                                            <th class="wide-column">Title</th>
+                                            <th class="wide-column">Research Objectives</th>
+                                            <th class="narrow-column">Duration</th>
+                                            <th class="narrow-column">Project Leader</th>
+                                            <th class="narrow-column">Approved Amount</th>
                                         </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($ongoing_research_projects)): ?>
+                                            <?php foreach ($ongoing_research_projects as $project): ?>
+                                                <tr>
+                                                    <td><?= esc($project['sector'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
+                                                    <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
+                                                    <td><?= esc($project['duration'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="6" class="has-text-centered has-text-grey-light">
+                                                    No ongoing projects
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="completed_projects" class="section-content">
+                                <h3 class="title is-5">Completed Research Projects</h3>
+                                <table class="table is-striped is-hoverable is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th class="narrow-column">Sector</th>
+                                            <th class="wide-column">Title</th>
+                                            <th class="wide-column">Research Objectives</th>
+                                            <th class="narrow-column">Duration</th>
+                                            <th class="narrow-column">Project Leader</th>
+                                            <th class="narrow-column">Approved Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($completed_research_projects)): ?>
+                                            <?php foreach ($completed_research_projects as $project): ?>
+                                                <tr>
+                                                    <td><?= esc($project['sector'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['research_project_name'] ?? 'N/A') ?></td>
+                                                    <td><?= nl2br(esc($project['project_objectives'] ?? 'N/A')) ?></td>
+                                                    <td><?= esc($project['duration'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['project_leader'] ?? 'N/A') ?></td>
+                                                    <td><?= esc($project['approved_amount'] ?? 'N/A') ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="6" class="has-text-centered has-text-grey-light">
+                                                    No completed projects
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -251,32 +259,40 @@
 <script>
     function navigateToCategory() {
         let dropdown = document.getElementById('categoryDropdown');
-        let selectedUrl = dropdown.value;
-        if (selectedUrl) {
-            window.location.href = selectedUrl;
+        let selectedValue = dropdown.value;
+
+        // Hide all sections
+        document.querySelectorAll('.section-content').forEach(function (section) {
+            section.style.display = 'none';
+        });
+
+        // Hide institution details (id="details") when a category other than "all" is selected
+        let institutionDetails = document.getElementById('details');
+        if (selectedValue === 'all') {
+            institutionDetails.style.display = 'block';
+        } else {
+            institutionDetails.style.display = 'none';
+        }
+
+        // Show the selected section
+        if (selectedValue === 'all') {
+            document.querySelectorAll('.section-content').forEach(function (section) {
+                section.style.display = 'block';
+            });
+        } else if (selectedValue === 'projects') {
+            // Show both ongoing and completed projects sections
+            document.getElementById('projects').style.display = 'block';
+            document.getElementById('completed_projects').style.display = 'block';
+        } else {
+            let section = document.getElementById(selectedValue);
+            if (section) {
+                section.style.display = 'block';
+            }
         }
     }
 
-    // Get URL Parameters
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name');
-    const image = params.get('image');
-    const file = params.get('file');
-
-    // Update Page Content
-    document.getElementById("institutionName").value = name || "";
-    document.getElementById("institutionImage").src = image || "/images/institution.png";
-    document.getElementById("downloadFile").href = file || "#";
-
-    // Handle File Upload
-    document.getElementById("fileInput").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            document.getElementById("uploadedFileName").textContent = file.name;
-            document.getElementById("downloadFile").href = URL.createObjectURL(file);
-            document.getElementById("downloadFile").download = file.name;
-        }
-    });
+    // Initialize the page by showing all sections initially
+    window.onload = navigateToCategory;
 </script>
 
 <?= $this->endSection() ?>

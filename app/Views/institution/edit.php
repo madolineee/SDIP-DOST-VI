@@ -299,8 +299,7 @@
                                         <select class="select-overlay"
                                             onchange="document.getElementById('type').value=this.value">
                                             <option value=""></option>
-                                            <option value="State">State</option>
-                                            <option value="University">University</option>
+                                            <option value="State University">State University</option>
                                             <option value="College">College</option>
                                             <option value="Training Center">Training Center</option>
                                             <option value="Research Institute">Research Institute</option>

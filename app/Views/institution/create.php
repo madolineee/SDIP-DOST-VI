@@ -2,6 +2,12 @@
 <?= $this->section('content') ?>
 
 <style>
+    .existing-institution-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
     .modal-card-head,
     .modal-card-foot {
         background-color: #f0f0f0;
@@ -273,16 +279,15 @@
                             <div class="field">
                                 <label class="label">Institution</label>
                                 <div class="control">
-                                    <input type="text" name="name" class="input" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Abbreviation</label>
-                                <div class="control">
-                                    <input type="text" name="abbreviation" class="input">
+                                    <div class="select">
+                                        <select id="institution-select" name="stakeholder_id" required>
+                                            <option value="">Select Institution</option>
+                                            <?php foreach ($stakeholders as $stakeholder): ?>
+                                                <option value="<?= $stakeholder['id'] ?>"><?= $stakeholder['name'] ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -297,144 +302,13 @@
                                         <select class="select-overlay"
                                             onchange="document.getElementById('type').value=this.value">
                                             <option value=""></option>
-                                            <option value="State">State</option>
-                                            <option value="University">University</option>
+                                            <option value="State University">State University</option>
                                             <option value="College">College</option>
                                             <option value="Training Center">Training Center</option>
                                             <option value="Research Institute">Research Institute</option>
                                             <option value="Member Institution">Member Institution</option>
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Honorifics</label>
-                                <div class="control">
-                                    <div class="select-input-container">
-                                        <input type="text" id="honorifics" name="honorifics" class="input"
-                                            placeholder="Or enter manually" list="honorifics-list">
-                                        <select class="select-overlay">
-                                            <option value=""></option>
-                                            <option value="Mr.">Mr.</option>
-                                            <option value="Ms.">Ms.</option>
-                                            <option value="Dr.">Dr.</option>
-                                            <option value="Prof.">Prof.</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">First Name</label>
-                                <div class="control">
-                                    <input type="text" name="first_name" class="input" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Middle Initial</label>
-                                <div class="control">
-                                    <input type="text" name="middle_name" class="input" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Last Name</label>
-                                <div class="control">
-                                    <input type="text" name="last_name" class="input" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Designation</label>
-                                <div class="control">
-                                    <input type="text" name="designation" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Country</label>
-                                <div class="control">
-                                    <div class="select-input-container">
-                                        <input type="text" id="country-input" name="country" class="input"
-                                            placeholder="Or enter manually">
-                                        <select class="select-overlay"
-                                            onchange="document.getElementById('country-input').value=this.value">
-                                            <option value=""></option>
-                                            <option value="USA">USA</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="UK">UK</option>
-                                            <option value="Australia">Australia</option>
-                                            <option value="Philippines">Philippines</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Province</label>
-                                <div class="control">
-                                    <input type="text" name="province" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Municipality</label>
-                                <div class="control">
-                                    <input type="text" name="municipality" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Street</label>
-                                <div class="control">
-                                    <input type="text" name="street" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Barangay</label>
-                                <div class="control">
-                                    <input type="text" name="barangay" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Telephone Number</label>
-                                <div class="control">
-                                    <input type="text" name="telephone_num" class="input">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-half">
-                            <div class="field">
-                                <label class="label">Email Address</label>
-                                <div class="control">
-                                    <input type="email" name="email_address" class="input">
                                 </div>
                             </div>
                         </div>
@@ -447,43 +321,109 @@
             </section>
         </div>
     </div>
+</body>
 
-    <script>
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('profile-preview').src = e.target.result;
-                    document.getElementById('profile-text').style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
+<script>
+    document.getElementById('institution-select').addEventListener('change', function () {
+        let stakeholderId = this.value;
+        const submitButton = document.querySelector('section.modal-card-foot button[type="submit"]'); // Updated button selector
+        const institutionField = document.getElementById('institution-select');
+
+        // Clear any previous messages or hover text
+        submitButton.removeAttribute('title');  // Clear previous hover text
+        submitButton.style.backgroundColor = ''; // Reset background color
+        submitButton.style.cursor = ''; // Reset cursor style
+
+        // Remove any existing error message
+        const existingMessage = document.getElementById('existing-institution-message');
+        if (existingMessage) existingMessage.remove();
+
+        if (stakeholderId) {
+            // Fetch the institution existence check
+            fetch('<?= site_url('institution/checkInstitutionExists') ?>/' + stakeholderId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        // Disable the submit button completely (make it unclickable)
+                        submitButton.disabled = true;
+                        submitButton.setAttribute('title', 'This institution is already stored.');
+
+                        // Apply styles to visually indicate the button is disabled
+                        submitButton.style.backgroundColor = 'gray';
+                        submitButton.style.cursor = 'not-allowed';  // Change the cursor to indicate it's disabled
+
+                        // Show the error message below the select input
+                        const message = document.createElement('p');
+                        message.id = 'existing-institution-message';
+                        message.style.color = 'red';
+                        message.textContent = "This institution is already stored.";
+                        institutionField.parentNode.appendChild(message);
+                    } else {
+                        // Re-enable the submit button if the institution is not stored
+                        submitButton.disabled = false;
+                        submitButton.removeAttribute('title'); // Clear the hover text
+                        submitButton.style.backgroundColor = ''; // Reset the button color
+                        submitButton.style.cursor = ''; // Reset cursor style
+                    }
+                })
+                .catch(error => console.error('Error checking institution:', error));
+
+            // Fetch and populate institution details as before
+            fetch('<?= site_url('institution/getStakeholderDetails') ?>/' + stakeholderId)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('input[name="abbreviation"]').value = data.abbreviation || '';
+                    document.querySelector('input[name="country"]').value = data.country || '';
+                    document.querySelector('input[name="province"]').value = data.province || '';
+                    document.querySelector('input[name="municipality"]').value = data.municipality || '';
+                    document.querySelector('input[name="street"]').value = data.street || '';
+                    document.querySelector('input[name="barangay"]').value = data.barangay || '';
+                    document.querySelector('input[name="honorifics"]').value = data.honorifics || '';
+                    document.querySelector('input[name="first_name"]').value = data.first_name || '';
+                    document.querySelector('input[name="middle_name"]').value = data.middle_name || '';
+                    document.querySelector('input[name="last_name"]').value = data.last_name || '';
+                    document.querySelector('input[name="designation"]').value = data.designation || '';
+                    document.querySelector('input[name="telephone_num"]').value = data.telephone_num || '';
+                    document.querySelector('input[name="email_address"]').value = data.email_address || '';
+                });
         }
+    });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".select-input-container").forEach(container => {
-                let inputField = container.querySelector("input");
-                let selectField = container.querySelector("select");
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-preview').src = e.target.result;
+                document.getElementById('profile-text').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
-                selectField.addEventListener("change", function () {
-                    if (this.value) {
-                        inputField.value = this.value;  // Update input field with selected value
-                        this.selectedIndex = 0;  // Reset dropdown to default empty option
-                    }
-                });
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".select-input-container").forEach(container => {
+            let inputField = container.querySelector("input");
+            let selectField = container.querySelector("select");
 
-                inputField.addEventListener("input", function () {
-                    if (this.value === "") {
-                        selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
-                    }
-                });
+            selectField.addEventListener("change", function () {
+                if (this.value) {
+                    inputField.value = this.value;  // Update input field with selected value
+                    this.selectedIndex = 0;  // Reset dropdown to default empty option
+                }
             });
 
-            document.getElementById("close-modal").addEventListener("click", function () {
-                window.location.href = "<?= base_url('institution/home') ?>"; // Redirect to institution/home
+            inputField.addEventListener("input", function () {
+                if (this.value === "") {
+                    selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
+                }
             });
         });
-    </script>
 
-    <?= $this->endSection() ?>
+        document.getElementById("close-modal").addEventListener("click", function () {
+            window.location.href = "<?= base_url('institution/home') ?>"; // Redirect to institution/home
+        });
+    });
+</script>
+
+<?= $this->endSection() ?>
