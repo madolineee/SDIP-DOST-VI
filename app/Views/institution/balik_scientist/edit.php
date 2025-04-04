@@ -23,14 +23,28 @@
         background-color: #fff;
     }
 
+    .image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+    }
+
     .profile-image {
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         overflow: hidden;
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: 2px solid #ddd;
         margin-bottom: 1rem;
+        position: relative;
+        background-color: #f0f0f0;
     }
 
     .profile-image img {
@@ -38,6 +52,41 @@
         height: 100%;
         object-fit: cover;
         display: block;
+    }
+
+    .edit-button {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 50%;
+        padding: 8px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .edit-button:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .hidden-input {
+        display: none;
+    }
+
+    .profile-text {
+        position: absolute;
+        color: rgba(54, 54, 54, 0.6);
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    #profile-preview.hidden {
+        display: none;
     }
 
     .title {
@@ -153,6 +202,30 @@
         margin-bottom: 1rem;
     }
 
+    .select-input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    .select-input-container input {
+        flex: 1;
+        padding-right: 2rem;
+        /* Space for dropdown */
+    }
+
+    .select-overlay {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        width: 2rem;
+    }
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -166,288 +239,180 @@
     }
 </style>
 
-<body>
-    <!-- Main Modal for First Transaction -->
-    <div class="modal is-active" id="main-modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Balik Scientist Information</p>
-                <button class="delete" aria-label="close" onclick="exitModal()"></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="image-placeholder has-text-centered">
+
+<!-- Main Modal for Editing Balik Scientist -->
+<div class="modal is-active" id="main-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Edit Balik Scientist</p>
+            <button class="delete" id="close-modal" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form id="balik-scientist-form"
+                action="<?= site_url('/institution/balik_scientist/update/' . $scientist['id']) ?>" method="post"
+                enctype="multipart/form-data">
+                <?= csrf_field() ?>
+
+                <!-- Image Upload -->
+                <div class="image-placeholder" onclick="document.getElementById('image').click()">
                     <figure class="profile-image">
-                        <img src="/images/profile.png" alt="Profile Picture">
+                        <img id="profile-preview"
+                            src="<?= base_url(($scientist['image'] ?? 'uploads/balik_scientists/default.png')) ?>">
+                        <div class="edit-button">
+                            <i class="fas fa-edit"></i>
+                        </div>
                     </figure>
+                    <input type="file" id="image" name="image" accept="image/png, image/jpeg" class="hidden-input"
+                        onchange="previewImage(event)">
                 </div>
-                <section class="modal-card-body">
-                    <form id="stakeholder-form">
-                        <h2 class="title is-5">Personal Information</h2>
-                        <div class="columns is-multiline">
-                            <div class="column is-one-quarter">
-                                <label class="label">Prefix</label>
+
+                <!-- Institution, Honorifics, and Role - Properly Aligned -->
+                <div class="columns">
+                    <div class="column is-one-third">
+                        <div class="field">
+                            <label class="label">Institution</label>
+                            <div class="control">
                                 <div class="select is-fullwidth">
-                                    <select>
-                                        <option>Mr.</option>
-                                        <option>Ms.</option>
-                                        <option>Dr.</option>
-                                        <option>Prof.</option>
+                                    <select name="institution" required>
+                                        <option value="">Select Institution</option>
+                                        <?php foreach ($institutions as $institution): ?>
+                                            <option value="<?= $institution->id ?>"
+                                                <?= ($institution->id == $scientist['institution_id']) ? 'selected' : '' ?>>
+                                                <?= $institution->name ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">First Name</label>
-                                <input class="input" type="text" placeholder="First Name" required>
-                            </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">Middle Initial</label>
-                                <input class="input" type="text" placeholder="M.I.">
-                            </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">Last Name</label>
-                                <input class="input" type="text" placeholder="Last Name" required>
-                            </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">Extension</label>
-                                <input class="input" type="text" placeholder="Jr., Sr., III">
-                            </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">Salutation</label>
-                                <input class="input" type="text" placeholder=" Honorable">
-                            </div>
-                            <div class="column is-one-quarter">
-                                <label class="label">Honorifics</label>
-                                <input class="input" type="text" placeholder="Ph.D., MD">
-                            </div>
                         </div>
+                    </div>
 
-                        <h2 class="title is-5">Designation</h2>
+                    <div class="column is-one-third">
                         <div class="field">
-                            <label class="label">Position</label>
-                            <input class="input" type="text" placeholder="Position">
-                        </div>
-                        <div class="field">
-                            <label class="label">Agency/Organization</label>
-                            <input class="input" type="text" placeholder="Agency or Organization">
-                        </div>
-                        <h2 class="title is-5">Contact Information</h2>
-                        <div class="columns is-multiline" id="contact-info">
-                            <div class="column is-half">
-                                <label class="label">Tel. No.</label>
-                                <input class="input" type="tel" placeholder="Tel. No.">
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Fax No.</label>
-                                <input class="input" type="tel" placeholder="Fax No.">
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Cell No.</label>
-                                <div class="field has-addons">
-                                    <p class="control is-expanded">
-                                        <input class="input" type="tel" placeholder="Cell No.">
-                                    </p>
-                                    <p class="control">
-                                        <button type="button" class="button is-success" onclick="addField('cell')">
-                                            <span class="icon is-small">
-                                                <i class="fas fa-plus"></i>
-                                            </span>
-                                        </button>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="column is-half">
-                                <label class="label">Email</label>
-                                <div class="field has-addons">
-                                    <p class="control is-expanded">
-                                        <input class="input" type="email" placeholder="Email">
-                                    </p>
-                                    <p class="control">
-                                        <button type="button" class="button is-success" onclick="addField('email')">
-                                            <span class="icon is-small">
-                                                <i class="fas fa-plus"></i>
-                                            </span>
-                                        </button>
-                                    </p>
+                            <label class="label">Honorifics</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="honorifics">
+                                        <option value="">Select Honorifics</option>
+                                        <option value="Mr." <?= ($scientist['honorifics'] == 'Mr.') ? 'selected' : '' ?>>
+                                            Mr.</option>
+                                        <option value="Ms." <?= ($scientist['honorifics'] == 'Ms.') ? 'selected' : '' ?>>
+                                            Ms.</option>
+                                        <option value="Dr." <?= ($scientist['honorifics'] == 'Dr.') ? 'selected' : '' ?>>
+                                            Dr.</option>
+                                        <option value="Prof." <?= ($scientist['honorifics'] == 'Prof.') ? 'selected' : '' ?>>Prof.</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <h2 class="title is-5">Complete Address</h2>
-                        <div class="columns is-multiline">
-                            <div class="column is-half">
-                                <label class="label">Street</label>
-                                <input class="input" type="text" placeholder="Street">
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Barangay</label>
-                                <input class="input" type="text" placeholder="Barangay">
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Municipality</label>
-                                <input class="input" type="text" placeholder="Municipality" required>
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Province</label>
-                                <input class="input" type="text" placeholder="Province" required>
-                            </div>
-                            <div class="column is-half">
-                                <label class="label">Country</label>
-                                <input class="input" type="text" placeholder="Country">
-                            </div>
-                        </div>
-
-                        <h2 class="title is-5">Research Projects</h2>
+                    <div class="column is-one-third">
                         <div class="field">
-                            <textarea class="textarea" placeholder="List of Research Projects"></textarea>
+                            <label class="label">Role</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="role" required>
+                                        <option value="">Select Role</option>
+                                        <option value="Key Official" <?= ($scientist['role'] == 'Key Official') ? 'selected' : '' ?>>Key Official</option>
+                                        <option value="Scientist" <?= ($scientist['role'] == 'Scientist') ? 'selected' : '' ?>>Scientist</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-
-
-                        <section class="modal-card-body has-text-right">
-                            <button class="button is-success" onclick="confirmTransaction()">Confirm</button>
-                        </section>
-                    </form>
-                </section>
-        </div>
-    </div>
-
-
-    <!-- Confirmation Modal -->
-    <div class="modal" id="warning-modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Confirmation</p>
-                <button class="delete" aria-label="close" onclick="closeConfirmationModal()"></button>
-            </header>
-            <section class="modal-card-body has-text-centered">
-                <p>Transaction has been saved!</p>
-            </section>
-            <footer class="modal-card-foot is-justify-content-center">
-                <button class="button is-primary" onclick="closeConfirmationModal()">OK</button>
-            </footer>
-        </div>
-    </div>
-
-
-    <script>
-        // Function to add fields dynamically
-
-        function addField(type) {
-            const contactInfo = document.getElementById("contact-info");
-            const column = document.createElement("div");
-            column.className = "column is-half";
-
-            let label, placeholder, inputType;
-            if (type === "cell") {
-                label = "Cell No.";
-                placeholder = "Additional Cell No.";
-                inputType = "tel";
-            } else if (type === "email") {
-                label = "Email";
-                placeholder = "Additional Email";
-                inputType = "email";
-            }
-
-            column.innerHTML = `
-                <label class="label mr-2">${label}</label>
-                <div class="field has-addons">
-                    <p class="control is-expanded">
-                        <input class="input" type="${inputType}" placeholder="${placeholder}">
-                    </p>
-                    <p class="control">
-                        <button type="button" class="button is-danger" onclick="removeField(this)">
-                            <span class="icon is-small">
-                                <i class="fas fa-minus"></i>
-                            </span>
-                        </button>
-                    </p>
+                    </div>
                 </div>
-            `;
-            contactInfo.appendChild(column);
+
+
+                <!-- Name Fields -->
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">First Name</label>
+                            <div class="control">
+                                <input type="text" name="first_name" class="input"
+                                    value="<?= esc($scientist['first_name']) ?>" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-quarter">
+                        <div class="field">
+                            <label class="label">Middle Initial</label>
+                            <div class="control">
+                                <input type="text" name="middle_name" class="input"
+                                    value="<?= esc($scientist['middle_name']) ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Last Name</label>
+                            <div class="control">
+                                <input type="text" name="last_name" class="input"
+                                    value="<?= esc($scientist['last_name']) ?>" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                        <textarea name="description" class="textarea"
+                            required><?= esc($scientist['description']) ?></textarea>
+                    </div>
+                </div>
+
+                <footer class="modal-card-foot is-flex is-justify-content-end">
+                    <button type="submit" class="button is-success">Update</button>
+                </footer>
+            </form>
+        </section>
+    </div>
+</div>
+
+
+<script>
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-preview').src = e.target.result;
+                document.getElementById('profile-text').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
         }
+    }
 
-        // Function to remove a field
-        function removeField(button) {
-            button.closest('.column').remove();
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".select-input-container").forEach(container => {
+            let inputField = container.querySelector("input");
+            let selectField = container.querySelector("select");
 
-        // Function to show the confirmation modal
-        // Function to add fields dynamically
-        function addField(type) {
-            const contactInfo = document.getElementById("contact-info");
-            const column = document.createElement("div");
-            column.className = "column is-half";
+            selectField.addEventListener("change", function () {
+                if (this.value) {
+                    inputField.value = this.value;  // Update input field with selected value
+                    this.selectedIndex = 0;  // Reset dropdown to default empty option
+                }
+            });
 
-            let label, placeholder, inputType;
-            if (type === "cell") {
-                label = "Cell No.";
-                placeholder = "Additional Cell No.";
-                inputType = "tel";
-            } else if (type === "email") {
-                label = "Email";
-                placeholder = "Additional Email";
-                inputType = "email";
-            }
+            inputField.addEventListener("input", function () {
+                if (this.value === "") {
+                    selectField.selectedIndex = 0;  // Reset dropdown if input is cleared
+                }
+            });
+        });
 
-            column.innerHTML = `
-        <label class="label mr-2">${label}</label>
-        <div class="field has-addons">
-            <p class="control is-expanded">
-                <input class="input" type="${inputType}" placeholder="${placeholder}">
-            </p>
-            <p class="control">
-                <button type="button" class="button is-danger" onclick="removeField(this)">
-                    <span class="icon is-small">
-                        <i class="fas fa-minus"></i>
-                    </span>
-                </button>
-            </p>
-        </div>
-    `;
-            contactInfo.appendChild(column);
-        }
-
-        // Function to remove a field
-        function removeField(button) {
-            button.closest('.column').remove();
-        }
-
-        // Function to show the confirmation modal
-        // Function to show the confirmation modal
-        function confirmTransaction() {
-            const mainModal = document.getElementById('main-modal');
-            const warningModal = document.getElementById('warning-modal');
-
-            // Hide main modal and show confirmation modal
-            mainModal.classList.remove('is-active');
-            warningModal.classList.add('is-active');
-        }
-
-        // Function to close the confirmation modal when "OK" button is clicked
-        function closeConfirmationModal() {
-            const warningModal = document.getElementById('warning-modal');
-            warningModal.classList.remove('is-active');
-        }
-
-
-        // Function to close the main modal
-        function exitModal() {
-            const mainModal = document.getElementById('main-modal');
-            if (mainModal) {
-                mainModal.classList.remove('is-active');
-            }
-
-            // Redirect to the specified page after closing the modal
-            window.location.href = "<?= base_url('institution/balik_scientist/index') ?>";
-        }
-
-
-    </script>
+        document.getElementById("close-modal").addEventListener("click", function () {
+            window.location.href = "<?= base_url('institution/balik_scientist/index') ?>"; // Redirect to institution/home
+        });
+    });
+</script>
 
 </body>
-
-</html>
 
 <?= $this->endSection() ?>

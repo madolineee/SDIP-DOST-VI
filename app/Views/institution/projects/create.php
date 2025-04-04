@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/directory-layout') ?>
+<?= $this->extend('layouts/header-layout') ?>
 <?= $this->section('content') ?>
 
 <style>
@@ -257,6 +257,35 @@
                     <div class="columns">
                         <div class="column">
                             <div class="field">
+                                <label class="label">Sector</label>
+                                <div class="control">
+                                    <div class="select-input-container">
+                                        <input type="text" id="sector" name="sector" class="input"
+                                            placeholder="Or enter manually" list="sector-list">
+                                        <select class="select-overlay">
+                                            <option value=""></option>
+                                            <option value="Health Research and Development">Health Research and
+                                                Development</option>
+                                            <option value="Industry, Energy, and Emerging Technologies">Industry,
+                                                Energy, and Emerging Technologies</option>
+                                            <option value="Agriculture, Aquatic, and Natural Resources">Agriculture,
+                                                Aquatic, and Natural Resources</option>
+                                            <option value="Disaster Risk Reduction and Climate Change Adaptation">
+                                                Disaster Risk Reduction and Climate Change Adaptation</option>
+                                            <option value="Space Technology Applications">Space Technology Applications
+                                            </option>
+                                            <option value="Environment and Natural Resources">Environment and Natural
+                                                Resources</option>
+                                            <option value="Food Safety and Nutrition">Food Safety and Nutrition</option>
+                                            <option value="Basic Research">Basic Research</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="field">
                                 <label class="label">Institution</label>
                                 <div class="control">
                                     <div class="select">
@@ -267,15 +296,6 @@
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column">
-                            <div class="field">
-                                <label class="label">Research Title</label>
-                                <div class="control">
-                                    <input type="text" name="name" class="input" required>
                                 </div>
                             </div>
                         </div>
@@ -301,11 +321,62 @@
                     </div>
 
                     <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Duration</label>
+                                <div class="control">
+                                    <input type="text" name="duration" class="input" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Project Leader</label>
+                                <div class="control">
+                                    <input type="text" name="project_leader" class="input" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Approved Amount</label>
+                                <div class="control">
+                                    <input type="text" name="approved_amount" class="input" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Research Title</label>
+                                <div class="control">
+                                    <input type="text" name="name" class="input" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns">
                         <div class="column is-full">
                             <div class="field">
                                 <label class="label">Description</label>
                                 <div class="control">
-                                    <textarea name="description" class="textarea" required></textarea>
+                                    <input name="description" class="input" required></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="column is-full">
+                            <div class="field">
+                                <label class="label">Research Objectives</label>
+                                <div class="control">
+                                    <textarea name="project_objectives" class="textarea" required></textarea>
                                 </div>
                             </div>
                         </div>
